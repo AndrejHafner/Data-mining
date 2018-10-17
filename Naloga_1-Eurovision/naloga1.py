@@ -32,11 +32,23 @@ def read_file(file_name):
     for attr in REMOVED_ATTRIBUTES:
         data_dict.pop(attr,None)
 
+    # Average the missing attributes
     for key in data_dict.keys():
-        print(data_dict[key])
+        for el in data_dict[key]:
+            idx = 0
+            if not el:
+                data_dict[key][idx] = calculate_average(data_dict,key,data_dict["Country"][idx])
+                #print("missing value at key: ",key)
+            idx += 1
 
+
+    # for key in data_dict.keys():
+    #     print(data_dict[key])
+    # print(data_dict.keys())
     return data_dict
 
+def calculate_average(data_dict,key,country):
+    return 5
 
 
 

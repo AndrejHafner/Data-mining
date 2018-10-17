@@ -32,23 +32,42 @@ def read_file(file_name):
     for attr in REMOVED_ATTRIBUTES:
         data_dict.pop(attr,None)
 
-    # Average the missing attributes
+    # Average the missing attributes from the votes to the country of previous years
     for key in data_dict.keys():
+        idx = 0
         for el in data_dict[key]:
-            idx = 0
-            if not el:
-                data_dict[key][idx] = calculate_average(data_dict,key,data_dict["Country"][idx])
-                #print("missing value at key: ",key)
+            if not el and data_dict["Country"][idx] != key:
+                country_row = data_dict["Country"][idx]
+                curr_avg = calculate_average(data_dict,key,country_row)
+                for i in range(idx,len(data_dict[key])):
+                    if(data_dict["Country"][i] == country_row):
+                        data_dict[key][i] = curr_avg
             idx += 1
 
-
-    # for key in data_dict.keys():
-    #     print(data_dict[key])
+    sum_country_rows(data_dict)
+    for key in data_dict.keys():
+        print(data_dict[key])
     # print(data_dict.keys())
     return data_dict
 
 def calculate_average(data_dict,key,country):
-    return 5
+    numbers = []
+    for i in range(len(data_dict[key])):
+        if data_dict["Country"][i] == country and data_dict[key][i]:
+            numbers.append(int(data_dict[key][i]))
+    return round(sum(numbers)/len(numbers)) if len(numbers) != 0 else 0
+
+def sum_country_rows(data_dict):
+    keys = list(filter(lambda x: x not in ["Year"],data_dict.keys()))
+    new_dict = dict.fromkeys(keys)
+    keys.remove("Country")
+    for country in data_dict["Country"]:
+        idx = 0
+        if country not in new_dict["Country"]:
+            new_country = data_dict["Country"][idx]
+            new_dict.setdefault("Country",[]).append(new_country)
+
+        idx += 1
 
 
 

@@ -1,5 +1,6 @@
 import csv
-import numpy as np
+import math
+import sys
 
 REMOVED_ATTRIBUTES = ['Region', 'Song language', 'Artist', 'Song', 'English translation', 'Artist gender', 'Group/Solo', 'Place', 'Points', 'Host Country', 'Host region', 'Home/Away Country', 'Home/Away Region', 'Approximate Betting Prices']
 
@@ -44,7 +45,8 @@ def read_file(file_name):
                         data_dict[key][i] = curr_avg
             idx += 1
 
-    sum_country_rows(data_dict)
+    #   NOT NEEDED
+    # sum_country_rows(data_dict)
     for key in data_dict.keys():
         print(data_dict[key])
     # print(data_dict.keys())
@@ -61,12 +63,22 @@ def sum_country_rows(data_dict):
     keys = list(filter(lambda x: x not in ["Year"],data_dict.keys()))
     new_dict = dict.fromkeys(keys)
     keys.remove("Country")
+    table = [[0] for i in range(len(keys))]
+    new_idx = 0
     for country in data_dict["Country"]:
         idx = 0
         if country not in new_dict["Country"]:
             new_country = data_dict["Country"][idx]
             new_dict.setdefault("Country",[]).append(new_country)
+            cnt = 0
+            for i in range(idx,len(data_dict["Country"])):
+                if data_dict["Country"][i] == new_country:
+                    cnt += 1
+                    cnt_col = 0
+                    for key in keys:
+                        cnt_col += 1
 
+            new_idx += 1
         idx += 1
 
 
@@ -78,6 +90,7 @@ class HierarchicalClustering:
         # self.clusters stores current clustering. It starts as a list of lists
         # of single elements, but then evolves into clusterings of the type
         # [[["Albert"], [["Branka"], ["Cene"]]], [["Nika"], ["Polona"]]]
+
         self.clusters = [[name] for name in self.data.keys()]
 
     def row_distance(self, r1, r2):
@@ -86,7 +99,11 @@ class HierarchicalClustering:
         Implement either Euclidean or Manhattan distance.
         Example call: self.row_distance("Polona", "Rajko")
         """
-        pass
+        _sum = 0
+        for i in range(len(self.data[r1])):
+            _sum += (self.data[r1][i] - self.data[r2][i])**2
+
+        return math.sqrt(_sum)
 
     def cluster_distance(self, c1, c2):
         """
@@ -96,7 +113,24 @@ class HierarchicalClustering:
             [[["Albert"], ["Branka"]], ["Cene"]],
             [["Nika"], ["Polona"]])
         """
-        pass
+        c1_items = self.get_nested_items(c1)
+        c2_items = self.get_nested_items(c2)
+        _sum = 0
+        for el1 in c1_items:
+            for el2 in c2_items:
+                _sum += self.row_distance(el1,el2)
+        return _sum/(len(c1_items) * len(c2_items))
+
+    def get_nested_items(self, lst):
+        items = []
+        for el in lst:
+            if type(el) == type([]):
+                items = self.get_nested_items(el) + items
+            else:
+                items.append(el)
+        return items
+
+
 
     def closest_clusters(self):
         """
@@ -105,7 +139,18 @@ class HierarchicalClustering:
 
         Example call: self.closest_clusters(self.clusters)
         """
-        pass
+        _min = sys.maxsize
+        c1,c2 = []
+        for i in range(len(self.clusters)):
+            for j in range(i, len(self.clusters)):
+                dist = self.cluster_distance(self.clusters[i],self.clusters[j])
+                if(dist < _min):
+                    _min = dist
+                    c1 = self.clusters[i]
+                    c2 = self.clusters[j]
+        return c1,c2,_min
+
+
 
     def run(self):
         """

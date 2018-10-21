@@ -1,4 +1,6 @@
 import unittest
+from time import sleep
+
 import numpy as np
 from scipy.spatial import distance
 
@@ -101,9 +103,10 @@ class HierarchicalClusteringTest(unittest.TestCase):
         hc.row_distance = lambda a, b: distance.euclidean(
             self.data[a], self.data[b])
         hc.run()
-
-        self.assertTrue(compare_trees(hc.clusters, CLUSTER_AVG_MAX) or
-                        compare_trees(hc.clusters, CLUSTER_MIN))
+        print("\n\n")
+        hc.plot_tree()
+        print("\n\n")
+        self.assertTrue(compare_trees(hc.clusters, CLUSTER_AVG_MAX) or compare_trees(hc.clusters, CLUSTER_MIN))
 
 
 if __name__ == "__main__":

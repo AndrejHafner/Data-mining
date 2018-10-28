@@ -2,6 +2,8 @@ import csv
 import math
 import sys
 
+# Author: Andrej Hafner (63160122)
+
 REMOVED_ATTRIBUTES = ['Region', 'Song language', 'Artist', 'Song', 'English translation', 'Artist gender', 'Group/Solo', 'Place', 'Points', 'Host Country', 'Host region', 'Home/Away Country', 'Home/Away Region', 'Approximate Betting Prices']
 
 def read_file(file_name):
@@ -18,7 +20,8 @@ def read_file(file_name):
         table.append(line)
 
     # Clean the keys and create a dictionary
-    table[0] = list(map(lambda x : str(x).strip(),table[0]))
+    #table[0] = list(map(lambda x : str(x).strip(),table[0]))
+    table[0] = [el.strip() for el in table[0]]
     data_dict = dict.fromkeys(table[0])
 
     # Insert all values into the dictionary

@@ -61,12 +61,18 @@ class KmedoidsClustering:
                 # Swap if the sum of all distances is smaller -> better result
                 if sum_now < sum_prev:
                     sum_prev = sum_now
-                    print("Switching, medoids now: ", keys_medoids)
-                    print(sum_now)
+                    best_medoid = medoids
+                    # print("Switching, medoids now: ", keys_medoids)
+                    # print(sum_now)
                 else:
                     tmp = non_medoids[j]
                     non_medoids[j] = keys_medoids[i]
                     keys_medoids[i] = tmp
+        return best_medoid
+
+    def kmedoids_avg(self,k = 4):
+        for i in range(100):
+            print(self.kmedoids(k=k).keys())
 
 
     def find_closest_points(self,medoids):
@@ -130,4 +136,4 @@ if __name__ == "__main__":
     # Read all the languages into a dictionary
     languages = {lang : unidecode(open("langs/" + lang + ".txt", "rt", encoding="utf8").read()).lower() for lang in LANGUAGES}
     kmedoids = KmedoidsClustering(languages)
-    kmedoids.kmedoids()
+    kmedoids.kmedoids_avg()

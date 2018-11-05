@@ -4,6 +4,7 @@ from unidecode import unidecode
 from collections import Counter
 from numpy.linalg import norm
 from itertools import combinations
+import matplotlib.pyplot as plt
 
 # Define languages to test
 LANG_ROMAN = ["itn","frn","por","spn","rum"]
@@ -29,6 +30,8 @@ class KmedoidsClustering:
 
 
     def kmedoids(self,k = 5):
+        """ Returns a list of clusters determined with the kmedoids method """
+
         # Create a dictionary with language frequencies
         lang_freq = {lang : dict(Counter(self.kmers(self.languages[lang]))) for lang in self.languages}
 
@@ -38,8 +41,6 @@ class KmedoidsClustering:
         # Create a distance matrix, lang_freq keys are indices for rows and columns
         # The matrix is SYMMETRIC ACROSS THE DIAGONAL, WATCH OUT
         self.get_dist_matrix(lang_freq)
-
-
 
         # Initialize
         medoids,distances = self.find_closest_points(medoids)
@@ -68,12 +69,56 @@ class KmedoidsClustering:
                     tmp = non_medoids[j]
                     non_medoids[j] = keys_medoids[i]
                     keys_medoids[i] = tmp
-        return best_medoid
+        return [best_medoid[key] + [key] for key in best_medoid.keys()]
 
-    def kmedoids_avg(self,k = 4):
-        for i in range(100):
-            print(self.kmedoids(k=k).keys())
+    def kmedoids_avg(self,k = 5):
+        for i in range(1):
+            clusters = self.kmedoids(k=k)
+            silhuettes = self.calc_silhuettes(clusters)
+            fig,ax = plt.subplots()
+            idx = 4
+            y_pos = np.arange(len(clusters[idx]))
+            items = list(item for key,item in silhuettes.items() if key in clusters[idx] )
+            ax.barh(y = y_pos,width=items,color='blue')
+            ax.set_yticks(y_pos)
+            ax.set_yticklabels(list(silhuettes.keys()))
+            ax.invert_yaxis()
+            plt.show()
 
+
+    def calc_silhuettes(self,clusters):
+        """ Calculate the silhuette for a cluster """
+        silhuettes = dict.fromkeys([item for sublist in clusters for item in sublist])
+        lang_idx = list(self.languages.keys())
+        dist_mat = self.dist_mat.copy()
+
+        for cluster in clusters:
+            if len(cluster) == 1:
+                silhuettes[cluster[0]] = 0
+                continue
+            for el in cluster:
+
+
+                cluster_without_el = cluster.copy()
+                cluster_without_el.remove(el)
+                print(cluster_without_el," el: ",el)
+                el_idx = lang_idx.index(el)
+                others_inside_idx = [lang_idx.index(key) for key in cluster_without_el]
+
+                # Calculate the average distance from a country to the other countries in the same cluster
+                avg_dist_inside = sum(dist_mat[el_idx,others_inside_idx]) / len(others_inside_idx)
+
+                # Calculate the smallest average distance to all points in any other cluster (the next best fit cluster for the point)
+                other_clusters = clusters.copy()
+                other_clusters.remove(cluster)
+                avg_outside_distances = []
+                for oth_cluster in other_clusters:
+                    oth_cluster_idxs = [lang_idx.index(key) for key in oth_cluster]
+                    avg_outside_distances.append(sum(dist_mat[el_idx,oth_cluster_idxs]) / len(oth_cluster_idxs))
+
+                avg_dist_outside = min(avg_outside_distances)
+                silhuettes[el] = round((avg_dist_outside - avg_dist_inside) / max(avg_dist_outside,avg_dist_inside),4)
+        return silhuettes
 
     def find_closest_points(self,medoids):
         """ Finds closest points to the medoids"""
@@ -85,18 +130,30 @@ class KmedoidsClustering:
         lang_keys = list(self.languages.keys())
         medoid_keys = list(medoids.keys())
 
+
         # Select only columns that show distances from medoids to other countries
         medoids_idx = list(map(lambda k: list(self.languages.keys()).index(k),medoids.keys()))
-        new_arr = self.dist_mat[:, medoids_idx]
+
+
+
+        new_arr = dist_mat[:, medoids_idx]
         distances = np.zeros(len(medoid_keys))
 
         # Set the value for the same country pair to max, so its never selected
         for i in range(len(medoids_idx)):
             new_arr[medoids_idx[i]][i] = 1
 
+        # Set the values of other medoids to max, so there can't be a country in two clusters
+        for i in range(len(medoids_idx)):
+            for idx in medoids_idx:
+                new_arr[idx][i] = 1
+
+
+
         # Find the nearest neighbours and add them to the medoids
         for i in range(len(self.languages)):
             min_val = min(new_arr[i])
+            if min_val == 1: continue # Don't select any of the other medoids
             min_idx = list(new_arr[i]).index(min_val)
             distances[min_idx] += min_val
             medoids[medoid_keys[min_idx]].append(lang_keys[i])

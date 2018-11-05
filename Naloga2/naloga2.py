@@ -1,10 +1,12 @@
+import glob
+import os
 import random as rnd
 import numpy as np
 from unidecode import unidecode
 from collections import Counter
 from numpy.linalg import norm
-from itertools import combinations
 import matplotlib.pyplot as plt
+from heapq import nlargest
 
 # Define languages to test
 LANG_ROMAN = ["itn","frn","por","spn","rum"]
@@ -24,13 +26,22 @@ class KmedoidsClustering:
         self.dist_mat = np.zeros(shape=(len(self.languages), len(self.languages)))
 
     def kmers(self,input,k = 3):
-        """ Generate k-mers for an input string """
+        """
+         Generate k-mers for an input string
+        :param input: Text to create k-mers from
+        :param k: Length of k-kmers
+        :return:
+        """
         for i in range(len(input) - k + 1):
             yield input[i:i + k]
 
 
     def kmedoids(self,k = 5):
-        """ Returns a list of clusters determined with the kmedoids method """
+        """
+         Returns a list of clusters determined with the kmedoids method
+        :param k: Number of medoids to initialize
+        :return:
+        """
 
         # Create a dictionary with language frequencies
         lang_freq = {lang : dict(Counter(self.kmers(self.languages[lang]))) for lang in self.languages}
@@ -63,31 +74,19 @@ class KmedoidsClustering:
                 if sum_now < sum_prev:
                     sum_prev = sum_now
                     best_medoid = medoids
-                    # print("Switching, medoids now: ", keys_medoids)
-                    # print(sum_now)
                 else:
                     tmp = non_medoids[j]
                     non_medoids[j] = keys_medoids[i]
                     keys_medoids[i] = tmp
         return [best_medoid[key] + [key] for key in best_medoid.keys()]
 
-    def kmedoids_avg(self,k = 5):
-        for i in range(1):
-            clusters = self.kmedoids(k=k)
-            silhuettes = self.calc_silhuettes(clusters)
-            fig,ax = plt.subplots()
-            idx = 4
-            y_pos = np.arange(len(clusters[idx]))
-            items = list(item for key,item in silhuettes.items() if key in clusters[idx] )
-            ax.barh(y = y_pos,width=items,color='blue')
-            ax.set_yticks(y_pos)
-            ax.set_yticklabels(list(silhuettes.keys()))
-            ax.invert_yaxis()
-            plt.show()
-
 
     def calc_silhuettes(self,clusters):
-        """ Calculate the silhuette for a cluster """
+        """
+         Calculate the silhuette for a cluster
+        :param clusters: list of lists that represents clusters
+        :return: dict with countries as keys and values as silhuettes
+        """
         silhuettes = dict.fromkeys([item for sublist in clusters for item in sublist])
         lang_idx = list(self.languages.keys())
         dist_mat = self.dist_mat.copy()
@@ -97,11 +96,8 @@ class KmedoidsClustering:
                 silhuettes[cluster[0]] = 0
                 continue
             for el in cluster:
-
-
                 cluster_without_el = cluster.copy()
                 cluster_without_el.remove(el)
-                print(cluster_without_el," el: ",el)
                 el_idx = lang_idx.index(el)
                 others_inside_idx = [lang_idx.index(key) for key in cluster_without_el]
 
@@ -120,22 +116,24 @@ class KmedoidsClustering:
                 silhuettes[el] = round((avg_dist_outside - avg_dist_inside) / max(avg_dist_outside,avg_dist_inside),4)
         return silhuettes
 
+
+
+
     def find_closest_points(self,medoids):
-        """ Finds closest points to the medoids"""
+        """
+         Finds closest points to the medoids
+        :param medoids: Randomly initialized medoids
+        :return: return the medoids with its clusters and the distances
+        """
 
         for key in medoids.keys():
             medoids[key] = []
-        #print(medoids)
         dist_mat = self.dist_mat.copy()
         lang_keys = list(self.languages.keys())
         medoid_keys = list(medoids.keys())
 
-
         # Select only columns that show distances from medoids to other countries
         medoids_idx = list(map(lambda k: list(self.languages.keys()).index(k),medoids.keys()))
-
-
-
         new_arr = dist_mat[:, medoids_idx]
         distances = np.zeros(len(medoid_keys))
 
@@ -147,8 +145,6 @@ class KmedoidsClustering:
         for i in range(len(medoids_idx)):
             for idx in medoids_idx:
                 new_arr[idx][i] = 1
-
-
 
         # Find the nearest neighbours and add them to the medoids
         for i in range(len(self.languages)):
@@ -162,7 +158,11 @@ class KmedoidsClustering:
 
 
     def get_dist_matrix(self,lang_freq):
-        """ Create a distance matrix between all texts """
+        """
+         Create a distance matrix between all texts
+        :param lang_freq: dictionary of kmers frequencies for a given language
+        :return: distance matrix between all languages (symmetric over the diagonal)
+        """
         keys = lang_freq.keys()
         for k1,i in zip(keys,range(len(keys))):
             for k2,j in zip(keys,range(len(keys))):
@@ -173,12 +173,17 @@ class KmedoidsClustering:
 
 
     def cosine_dist(self,a,b):
-        """ Calculates the cosine distance between two dictionaries """
+        """
+        Calculates the cosine distance between two dictionaries
+        :param a: dict of the first language
+        :param b: dict of the second language
+        :return: return the euclidean distance between the frequencies of kmers in languages
+        """
 
         # Get the kmers that are in both languags
-        lang_union = a.keys() & b.keys()
-        list_a = [a[key] for key in lang_union]
-        list_b = [b[key] for key in lang_union]
+        lang_intersection = a.keys() & b.keys()
+        list_a = [a[key] for key in lang_intersection]
+        list_b = [b[key] for key in lang_intersection]
 
         # FIXME je v redu norma??
         # Calculate cosine distance between relevant ones
@@ -186,11 +191,121 @@ class KmedoidsClustering:
         #dist = 1 - np.dot(list_a,list_b) / (norm(list(a.values())) * norm(list(b.values())))
         return 0 if dist < 1e-9 else round(dist,6)
 
+    def kmedoids_avg(self,k = 5):
+        """
+        Calculates the silhuettes over 100 iterations with randomly initialized medoids to find the best and the worst one
+        :param k: number of medoids
+        :return: void
+        """
+
+        # Find the best and the worst clusters depending on the silhuette
+        best_silh = dict()
+        worst_silh = dict()
+        best_clusters = []
+        worst_clusters = []
+
+        # The higher the silhuette the better the object matches it's cluster (ranges between -1 and 1)
+        worst_avg_silh = 1
+        best_avg_silh = -1
+
+        iterations = 100
+
+        for i in range(iterations):
+            print("Starting kmedoits iteration ",i," of ",iterations,".")
+            clusters = self.kmedoids(k=k)
+            silhuettes = self.calc_silhuettes(clusters)
+            avg_silh = sum(silhuettes.values()) / len(silhuettes.values())
+            if avg_silh < worst_avg_silh:
+                worst_avg_silh = avg_silh
+                worst_silh = silhuettes
+                worst_clusters = clusters
+            if avg_silh > best_avg_silh:
+                best_avg_silh = avg_silh
+                best_silh = silhuettes
+                best_clusters = clusters
+
+        # Plot the best and the worst
+        print("Finished finding best and worst silhuettes, worstAvg=",round(worst_avg_silh,3),"; bestAvg=",round(best_avg_silh,3))
+        self.plot_silhuettes(worst_silh,worst_clusters,title = "Worst silhuettes")
+        self.plot_silhuettes(best_silh,best_clusters, title = "Best silhuettes")
+
+    def plot_silhuettes(self,silhuettes,clusters,title = "Silhuette"):
+        """
+        Plots the silhuettes
+        :param silhuettes: dict with values as silhuettes and keys as labels
+        :param clusters: clusters from which the silhuettes were calculates
+        :param title: plot title
+        :return: void
+        """
+        plt.close('all')
+        for idx in range(len(clusters)):
+            fig, ax = plt.subplots()
+            y_pos = np.arange(len(clusters[idx]))
+
+            items = sorted([(key,item) for key, item in silhuettes.items() if key in clusters[idx]], key=lambda tup: tup[1],reverse=True)
+
+            values = [item for key,item in items]
+            labels = [key for key,item in items]
+
+            ax.barh(y=y_pos, width=values, color='blue')
+            ax.set_yticks(y_pos)
+            ax.set_xlabel("Silhuette")
+            ax.set_title(title)
+            ax.set_yticklabels(labels)
+            ax.invert_yaxis()
+            plt.show()
+
+
+    def determine_language(self,text,nbiggest = 3):
+        """
+        Return the probability of the given text being in a certain language (top k probabilities)
+        :param text: given text to determine
+        :param nbiggest:
+        :return: The most probable languages with probabilities
+        """
+
+        # Create a dictionary with language frequencies
+        lang_freq = {lang: dict(Counter(self.kmers(self.languages[lang]))) for lang in self.languages}
+
+
+        # Get the kmers frequencies for the given text
+        text_freq = dict(Counter(self.kmers(text)))
+
+        # Calculate the similarity of the text to the texts in other languages (1-.. to show similarity
+        distances = {lang : 1 - self.cosine_dist(text_freq,lang_freq[lang]) for lang in lang_freq.keys()}
+
+        # Get the nbiggest most probable langues
+        most_probable = nlargest(nbiggest,distances.items(),key= lambda tup: tup[1])
+
+        return most_probable
+
+    def determine_paragraph_lang(self):
+        """
+        Determines the languages of the paragraphs in folder /paragraph
+        :return: void
+        """
+        for file_name in glob.glob("paragraphs/*"):
+            name = os.path.splitext(os.path.basename(file_name))[0]
+            text = unidecode(open(file_name,"rt",encoding="utf8").read().lower())
+            print("Text in language: ",name)
+            print("Detected languages with probability:")
+            for lang,prob in self.determine_language(text):
+                print(lang,":",prob)
+            print()
 
 
 
 if __name__ == "__main__":
+    # Shuffle the LANGUAGES
+    rnd.shuffle(LANGUAGES)
+
     # Read all the languages into a dictionary
     languages = {lang : unidecode(open("langs/" + lang + ".txt", "rt", encoding="utf8").read()).lower() for lang in LANGUAGES}
     kmedoids = KmedoidsClustering(languages)
+
+    # Average kmedoids
     kmedoids.kmedoids_avg()
+
+    # Determine languages
+    kmedoids.determine_paragraph_lang()
+

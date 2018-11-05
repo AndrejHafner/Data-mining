@@ -117,8 +117,6 @@ class KmedoidsClustering:
         return silhuettes
 
 
-
-
     def find_closest_points(self,medoids):
         """
          Finds closest points to the medoids
@@ -171,7 +169,6 @@ class KmedoidsClustering:
         return self.dist_mat
 
 
-
     def cosine_dist(self,a,b):
         """
         Calculates the cosine distance between two dictionaries
@@ -190,6 +187,7 @@ class KmedoidsClustering:
         dist = 1 - np.dot(list_a,list_b) / (norm(list_a) * norm(list_b))
         #dist = 1 - np.dot(list_a,list_b) / (norm(list(a.values())) * norm(list(b.values())))
         return 0 if dist < 1e-9 else round(dist,6)
+
 
     def kmedoids_avg(self,k = 5):
         """
@@ -211,7 +209,7 @@ class KmedoidsClustering:
         iterations = 100
 
         for i in range(iterations):
-            print("Starting kmedoits iteration ",i," of ",iterations,".")
+            print("Starting kmedoids iteration ",i," of ",iterations,".")
             clusters = self.kmedoids(k=k)
             silhuettes = self.calc_silhuettes(clusters)
             avg_silh = sum(silhuettes.values()) / len(silhuettes.values())
@@ -228,6 +226,7 @@ class KmedoidsClustering:
         print("Finished finding best and worst silhuettes, worstAvg=",round(worst_avg_silh,3),"; bestAvg=",round(best_avg_silh,3))
         self.plot_silhuettes(worst_silh,worst_clusters,title = "Worst silhuettes")
         self.plot_silhuettes(best_silh,best_clusters, title = "Best silhuettes")
+
 
     def plot_silhuettes(self,silhuettes,clusters,title = "Silhuette"):
         """
@@ -276,8 +275,8 @@ class KmedoidsClustering:
 
         # Get the nbiggest most probable langues
         most_probable = nlargest(nbiggest,distances.items(),key= lambda tup: tup[1])
-
         return most_probable
+
 
     def determine_paragraph_lang(self):
         """
@@ -294,6 +293,19 @@ class KmedoidsClustering:
             print()
 
 
+def read_paragraphs(path):
+    """
+    Reads all the files in the given path and returns the dictionary with keys as filenames and its contents as values
+    :param path: path of files
+    :return: corpus
+    """
+    corpus = {}
+    for file_name in glob.glob("%s/*" % path):
+        name = os.path.splitext(os.path.basename(file_name))[0]
+        text = unidecode(open(file_name, "rt", encoding="utf8").read().lower())
+        corpus[name] = text
+    return corpus
+
 
 if __name__ == "__main__":
     # Shuffle the LANGUAGES
@@ -301,11 +313,16 @@ if __name__ == "__main__":
 
     # Read all the languages into a dictionary
     languages = {lang : unidecode(open("langs/" + lang + ".txt", "rt", encoding="utf8").read()).lower() for lang in LANGUAGES}
-    kmedoids = KmedoidsClustering(languages)
+
+    # Using the provided languages
+    # kmedoids = KmedoidsClustering(languages)
+
+    # Using the news paragraphs
+    kmedoids = KmedoidsClustering(read_paragraphs("paragraphs"))
 
     # Average kmedoids
     kmedoids.kmedoids_avg()
 
-    # Determine languages
-    kmedoids.determine_paragraph_lang()
+    # Determine languages - don't use with paragraphs (ABSURD)
+    #kmedoids.determine_paragraph_lang()
 

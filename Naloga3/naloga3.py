@@ -8,9 +8,19 @@ from Naloga3.linear import LinearLearner, LinearRegClassifier
 
 DATETIME_FORMAT = "%Y-%m-%d %H:%M:%f"
 
-# features = ["registration","driver_id","dep_month","dep_day","dep_hour","dep_minute","dep_second"]
-days_features = ["day_%d" % (i+1) for i in range(31)]
-features = ["dep_hour"]# + days_features
+
+holidays = ["1.1","2.1","8.2","27.4","1.5","2.5","25.6","15.8","31.10","1.11","25.12","26.12","31.12"]
+
+seasons = ["winter","spring","summer","fall"]
+
+features = ["dep_hour_sin","dep_hour_cos","dep_minute_sin","dep_minute_cos","weekends_holidays","dep_month_sin","dep_month_cos","rush_hour","hour_avg","driver_dev_from_avg"] + seasons
+
+
+trained_avg_hour = []
+trained_driver_dev_from_avg = dict()
+
+
+
 
 # Created by the lab assistant - Andrej Čopar
 def parsedate(x):
@@ -35,20 +45,11 @@ def get_day_seconds(time_str):
     dt = get_datetime(time_str)
     return dt.hour * 3600 + dt.minute * 60 + dt.second
 
-def preprocess_data(data, train = True):
+def preprocess_data(data, train = True,trained_avg_time = None, trained_driver_dev = None):
     # Initialize the output data frame
     dataframe = pd.DataFrame(columns= features + ["target_var"])
 
-    sum_time = [0 for i in range(0,23)]
-    cnt_time = [0 for i in range(0,23)]
-    if train:
-        for row in data[["Departure time","Arrival time"]].values:
-            hour = get_datetime(row[0]).hour
-            sum_time[hour] += tsdiff(get_datetime(row[1]),get_datetime(row[0]))
-            cnt_time[hour] += 1
 
-
-    avg_time = list(map(lambda sum, cnt:30*60 if cnt == 0 else sum / cnt,sum_time,cnt_time))
 
 
     # FEATURE = driver ID -> the arrival time can depend on the driver
@@ -57,49 +58,110 @@ def preprocess_data(data, train = True):
     # # FEATURE = registration -> different vehicles can have different properties, thus taking different times
     # unique_registrations = list(set(data["Registration"]))
     # dataframe["registration"] = list(map(lambda x: unique_registrations.index(x),data["Registration"]))
-    #
-    # # FEATURE = departure month
-    # dataframe["dep_month"] = np.array(list(map(lambda x: get_datetime(x).month,data["Departure time"])))
-    #
-    # # FEATURE = departure day -> can depend if its a weekened or a holiday
-    # dataframe["dep_day"] = np.array(list(map(lambda x: get_datetime(x).day,data["Departure time"])))
-    #
+
+
     # # FEATURE = departure hour
-    dataframe["dep_hour"] = np.array(list(map(lambda x: get_datetime(x).hour,data["Departure time"])))
-    #
-    # # FEATURE = departure minute
-    # dataframe["dep_minute"] = np.array(list(map(lambda x: get_datetime(x).minute, data["Departure time"])))
-    #
-    # # FEATURE = departure second
-    # dataframe["dep_second"] = np.array(list(map(lambda x: get_datetime(x).second, data["Departure time"])))
+    dataframe["dep_hour_sin"] = np.array(list(map(lambda x: np.sin(get_datetime(x).hour * (2.0 * np.pi/24)),data["Departure time"])))
+    dataframe["dep_hour_cos"] = np.array(list(map(lambda x: np.cos(get_datetime(x).hour * (2.0 * np.pi/24)),data["Departure time"])))
+    #dataframe["dep_minute"] = np.array(list(map(lambda x: 0.0 if get_datetime(x).minute < 30 else 1.0,data["Departure time"])))
+    dataframe["dep_minute_sin"] = np.array(list(map(lambda x:np.sin(get_datetime(x).minute * (2.0 * np.pi/60)),data["Departure time"])))
+    dataframe["dep_minute_cos"] = np.array(list(map(lambda x:np.cos(get_datetime(x).minute * (2.0 * np.pi/60)),data["Departure time"])))
+
+    # dataframe["dep_month"] = np.array(list(map(lambda x: 1.0 if get_datetime(x).month in [11,12] else 0.0,data["Departure time"])))
+    dataframe["dep_month_sin"] = np.array(list(map(lambda x: np.sin(get_datetime(x).month * (2.0 * np.pi/12)),data["Departure time"])))
+    dataframe["dep_month_cos"] = np.array(list(map(lambda x: np.cos(get_datetime(x).month * (2.0 * np.pi/12)),data["Departure time"])))
+
+    dataframe["winter"] = np.array(list(map(lambda x: 1 if get_datetime(x).month in [11,12,1,2] else 0,data["Departure time"])))
+    dataframe["spring"] = np.array(list(map(lambda x: 1 if get_datetime(x).month in [3,4,5] else 0,data["Departure time"])))
+    dataframe["summer"] = np.array(list(map(lambda x: 1 if get_datetime(x).month in [6,7,8] else 0,data["Departure time"])))
+    dataframe["fall"] = np.array(list(map(lambda x: 1 if get_datetime(x).month in [9,10] else 0,data["Departure time"])))
+
+
+    dataframe["rush_hour"] = np.array(list(map(lambda x: 1 if get_datetime(x).hour in [6,7,8,15,16,17] else 0,data["Departure time"])))
+
+    if "weekends_holidays" in features:
+        dataframe["weekends_holidays"] = np.array(list(map(lambda x: 1 if (get_datetime(x).weekday() >= 5 or ("%d.%d" % (get_datetime(x).day,get_datetime(x).month)) in holidays) else 0, data["Departure time"])))
+
+
+
+
+    if train:
+        # Calculate average drive time
+        drive_times = [abs(tsdiff(get_datetime(row[0]),get_datetime(row[1]))) for row in data[["Departure time", "Arrival time"]].values]
+        avg_drive_time = sum(drive_times) / len(drive_times)
+        # Calculate 30 minute average drive times
+        sum_time = [0 for i in range(0, 47)]
+        cnt_time = [0 for i in range(0, 47)]
+        for row in data[["Departure time", "Arrival time"]].values:
+            if get_datetime(row[0]).month in [6, 7, 8]: # May, June, July, August, September
+                continue
+            hour = get_datetime(row[0]).hour
+            minute = get_datetime(row[0]).minute
+            if minute < 30:
+                sum_time[hour] += tsdiff(get_datetime(row[1]), get_datetime(row[0]))
+                cnt_time[hour] += 1
+            else:
+                sum_time[hour+24] += tsdiff(get_datetime(row[1]), get_datetime(row[0]))
+                cnt_time[hour+24] += 1
+        avg_time = list(map(lambda sum, cnt: avg_drive_time if cnt == 0 else sum / cnt, sum_time, cnt_time))
+        trained_avg_hour = avg_time
+
+        # dataframe["target_var"] = np.array(list(map(lambda x: avg_time[get_datetime(x).hour] if get_datetime(x).minute < 30 else avg_time[get_datetime(x).hour+24], data["Departure time"])))
+        dataframe["target_var"] = np.array(list(map(lambda x,y: abs(tsdiff(get_datetime(x),get_datetime(y))), data["Departure time"],data["Arrival time"])))
+        dataframe["hour_avg"] = np.array(list(map(lambda x: avg_time[get_datetime(x).hour] if get_datetime(x).minute < 30 else avg_time[get_datetime(x).hour+24],data["Departure time"])))
+
+        # Find slow drivers
+        driver_ids = set(data["Driver ID"])
+        slow_drivers = []
+        fast_drivers = []
+        thresh = 90
+        driver_diff = dict()
+        for id in driver_ids:
+            single_driver = data[data["Driver ID"] == id]
+            _sum = 0
+            cnt = 0
+            for drive in single_driver[["Departure time", "Arrival time"]].values:
+                _sum += abs(tsdiff(get_datetime(drive[0]), get_datetime(drive[1])))
+                cnt += 1
+            driver_avg = _sum / cnt
+            diff = (driver_avg - avg_drive_time)
+            driver_diff[str(id)] = diff
+            #print("Driver %d has an average error of %d" % (id,diff))
+
+            if diff < -thresh:
+                fast_drivers.append(id)
+            elif diff > thresh:
+                slow_drivers.append(id)
+        trained_driver_dev_from_avg = driver_diff
+        dataframe["driver_dev_from_avg"] = np.array(list(map(lambda x: driver_diff[str(x)] , data["Driver ID"])))
+        # dataframe["slow_driver"] = np.array(list(map(lambda x: 1 if x in slow_drivers else 0 , data["Driver ID"])))
+        # dataframe["fast_driver"] = np.array(list(map(lambda x: 1 if x in fast_drivers else 0 , data["Driver ID"])))
+    else:
+        if trained_avg_time != None and trained_driver_dev != None:
+            dataframe["hour_avg"] = np.array(list(map(lambda x: trained_avg_time[get_datetime(x).hour] if get_datetime(x).minute < 30 else trained_avg_time[get_datetime(x).hour+24],data["Departure time"])))
+            dataframe["driver_dev_from_avg"] = np.array(list(map(lambda x: trained_driver_dev[str(x)] if str(x) in trained_driver_dev.keys() else 0.0 , data["Driver ID"])))
+            trained_avg_hour, trained_driver_dev_from_avg = [],[]
+
+
+
+
+
+
 
 
 
     #dataframe["dep_time"] = np.array(list(map(lambda dep_time,arr_time: tsdiff(get_datetime(arr_time),get_datetime(dep_time)), data["Departure time"],data["Arrival time"])))
 
-    if "weekend" in features:
-        dataframe["weekend"] = np.array(list(map(lambda x: 1.0 if get_datetime(x).weekday() >= 5 else 0.0, data["Departure time"])))
 
-    # Set for separate days
-    if "day_1" in dataframe:
-        for i in range(len(data)):
-            day_idx = "day_" + str(get_datetime(data.get_value(i,"Departure time")).day)
-            empty = days_features.copy()
-            empty.remove(day_idx)
-            dataframe.loc[i,empty] = float(0.0)
-            dataframe.loc[i,day_idx] = float(0.0)
-            if( i % 100 == 0):
-                print("Created features for %d rows out of %d" % (i, len(data)))
 
 
     # Add the target variable to the dataframe
-    if data["Arrival time"][1] != "?":
-        dataframe["target_var"] = np.array(list(map(lambda x: avg_time[get_datetime(x).hour],data["Departure time"])))
+    # if data["Arrival time"][1] != "?":
+    #     dataframe["target_var"] = np.array(list(map(lambda x: avg_time[get_datetime(x).hour],data["Departure time"])))
         #dataframe["target_var"] = np.array(list(map(lambda x: round(time.mktime(get_datetime(x).timetuple())),data["Arrival time"])))
         # dataframe["target_var"] = np.array(list(map(lambda dep_time, arr_time: tsdiff(get_datetime(arr_time), get_datetime(dep_time)),
         #                   data["Departure time"], data["Arrival time"])))
-
-    return dataframe
+    return dataframe,trained_avg_hour ,trained_driver_dev_from_avg
 
 def calculate_error(mod_df, test_df):
     pass
@@ -114,7 +176,7 @@ def kfold(df,i,k = 10):
 def crossvalidate(df,data):
 
     errors = []
-    model = LinearLearner(lambda_=0.0001)
+    model = LinearLearner(lambda_=0.1)
 
     print("Starting crossvalidation")
     for i in range(1,11):
@@ -123,6 +185,8 @@ def crossvalidate(df,data):
         _sum = 0
         vals = train_df[features].values
         classifier = model(vals,train_df["target_var"])
+        print("Model thetas: " + str(list(classifier.th)))
+        #classifier.th[2] = classifier.th[3] * 2
 
         # Evaluate the error
         print("Iteration %d of 10" % i)
@@ -142,32 +206,25 @@ def crossvalidate(df,data):
 
 
 if __name__ == "__main__":
-    data = pd.read_csv("data/train_pred.csv", sep='\t')#.sample(frac=1, random_state=42).reset_index(drop=True)
-    sum_time = [0 for i in range(0, 23)]
-    cnt_time = [0 for i in range(0, 23)]
-
-    for row in data[["Departure time", "Arrival time"]].values:
-        hour = get_datetime(row[0]).hour
-        sum_time[hour] += tsdiff(get_datetime(row[1]), get_datetime(row[0]))
-        cnt_time[hour] += 1
-
-    avg_time = list(map(lambda sum, cnt: 30 * 60 if cnt == 0 else sum / cnt, sum_time, cnt_time))
-
-    # train_df = preprocess_data(data)
+    train_data = pd.read_csv("data/train_pred.csv", sep='\t')#.sample(frac=1, random_state=42).reset_index(drop=True)
     test_data = pd.read_csv("data/test_pred.csv",sep='\t')
+    train_df,trained_avg_hour,trained_driver_dev_from_avg = preprocess_data(train_data)
+    #print(crossvalidate(train_df,train_data))
 
-    for i in range(len(test_data)):
-        dep_time = get_datetime(test_data["Departure time"].values[i])
-        print(dep_time + timedelta(seconds=avg_time[dep_time.hour]))
 
-    # test_df = preprocess_data(test_data,train=False)
-    # model = LinearLearner()
-    # classifier = model(train_df[features].values,train_df["target_var"])
-    # #print(crossvalidate(train_df,data))
-    # i = 0
-    # for row in test_df[features].values:
-    #     deltas = classifier(row)
-    #     print(get_datetime(test_data["Departure time"].values[i]) + timedelta(seconds = deltas))
-    #     i += 1
-    # print(classifier(10))
+
+
+
+
+
+    test_df,not1,not2 = preprocess_data(test_data,train=False,trained_driver_dev = trained_driver_dev_from_avg, trained_avg_time = trained_avg_hour)
+    print("Starting to predict arrival times...")
+    model = LinearLearner(lambda_=1.0)
+    classifier = model(train_df[features].values,train_df["target_var"])
+
+    i = 0
+    for row in test_df[features].values:
+        deltas = classifier(row)
+        print(get_datetime(test_data["Departure time"].values[i]) + timedelta(seconds = deltas))
+        i += 1
 

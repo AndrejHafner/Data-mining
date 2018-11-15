@@ -3,11 +3,13 @@ import numpy as np
 import pandas as pd
 import time
 
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn import linear_model
+
 from datetime import datetime,timedelta
 from Naloga3.linear import LinearLearner, LinearRegClassifier
-
-DATETIME_FORMAT = "%Y-%m-%d %H:%M:%f"
-
+from Naloga3.lpp_prediction import LppPrediction
+from Naloga3.lpputils import get_datetime, tsdiff
 
 holidays = ["1.1","2.1","8.2","27.4","1.5","2.5","25.6","15.8","31.10","1.11","25.12","26.12","31.12"]
 
@@ -22,32 +24,14 @@ trained_driver_dev_from_avg = dict()
 
 
 
-# Created by the lab assistant - Andrej Čopar
-def parsedate(x):
-    if not isinstance(x, datetime):
-        x = datetime.strptime(x, DATETIME_FORMAT)
-    return x
 
-# Created by the lab assistant - Andrej Čopar
-def tsdiff(x, y):
-    return (parsedate(x) - parsedate(y)).total_seconds()
 
-# Created by the lab assistant - Andrej Čopar
-def tsadd(x, seconds):
-    d = timedelta(seconds=seconds)
-    nd = parsedate(x) + d
-    return nd.strftime(DATETIME_FORMAT)
 
-def get_datetime(time_str):
-    return datetime.strptime(time_str.replace(".000",""),DATETIME_FORMAT)
-
-def get_day_seconds(time_str):
-    dt = get_datetime(time_str)
-    return dt.hour * 3600 + dt.minute * 60 + dt.second
 
 def preprocess_data(data, train = True,trained_avg_time = None, trained_driver_dev = None):
     # Initialize the output data frame
     dataframe = pd.DataFrame(columns= features + ["target_var"])
+
 
 
 
@@ -93,8 +77,8 @@ def preprocess_data(data, train = True,trained_avg_time = None, trained_driver_d
         sum_time = [0 for i in range(0, 47)]
         cnt_time = [0 for i in range(0, 47)]
         for row in data[["Departure time", "Arrival time"]].values:
-            if get_datetime(row[0]).month in [6, 7, 8]: # May, June, July, August, September
-                continue
+            # if get_datetime(row[0]).month in [6, 7, 8]: # May, June, July, August, September
+            #     continue
             hour = get_datetime(row[0]).hour
             minute = get_datetime(row[0]).minute
             if minute < 30:
@@ -163,8 +147,6 @@ def preprocess_data(data, train = True,trained_avg_time = None, trained_driver_d
         #                   data["Departure time"], data["Arrival time"])))
     return dataframe,trained_avg_hour ,trained_driver_dev_from_avg
 
-def calculate_error(mod_df, test_df):
-    pass
 
 def kfold(df,i,k = 10):
     n = len(df)
@@ -176,7 +158,9 @@ def kfold(df,i,k = 10):
 def crossvalidate(df,data):
 
     errors = []
-    model = LinearLearner(lambda_=0.1)
+    # model = LinearLearner(lambda_=0.1)
+
+    poly = PolynomialFeatures(degree=2)
 
     print("Starting crossvalidation")
     for i in range(1,11):
@@ -184,16 +168,24 @@ def crossvalidate(df,data):
         data_train_df, data_test_df = kfold(data,i)
         _sum = 0
         vals = train_df[features].values
-        classifier = model(vals,train_df["target_var"])
-        print("Model thetas: " + str(list(classifier.th)))
+        # classifier = model(vals,train_df["target_var"])
+        # print("Model thetas: " + str(list(classifier.th)))
         #classifier.th[2] = classifier.th[3] * 2
+        poly = PolynomialFeatures(degree=2)
+        X_ = poly.fit_transform(vals)
+        predict_ = poly.fit_transform(test_df[features].values)
+
+        clf = linear_model.LinearRegression()
+        clf.fit(X_, train_df["target_var"])
+        pred_seconds = clf.predict(predict_)
 
         # Evaluate the error
         print("Iteration %d of 10" % i)
         for j in range(len(test_df)):
             actual_date = get_datetime(data_test_df["Arrival time"].values[j])
-            pred_seconds = classifier(test_df[features].values[j])
-            pred_date = get_datetime(data_test_df["Departure time"].values[j]) + timedelta(seconds=pred_seconds)
+            # pred_seconds = classifier(test_df[features].values[j])
+           # predict_ = poly.fit_transform(test_df[features].values[j])
+            pred_date = get_datetime(data_test_df["Departure time"].values[j]) + timedelta(seconds=pred_seconds[j])
 
             _sum += abs(tsdiff(pred_date,actual_date))
         errors.append(_sum / len(test_df))
@@ -206,25 +198,52 @@ def crossvalidate(df,data):
 
 
 if __name__ == "__main__":
-    train_data = pd.read_csv("data/train_pred.csv", sep='\t')#.sample(frac=1, random_state=42).reset_index(drop=True)
-    test_data = pd.read_csv("data/test_pred.csv",sep='\t')
-    train_df,trained_avg_hour,trained_driver_dev_from_avg = preprocess_data(train_data)
-    #print(crossvalidate(train_df,train_data))
+    train_data = pd.read_csv("data/train.csv", sep='\t').sample(frac=0.01, random_state=42).reset_index(drop=True)
+    test_data = pd.read_csv("data/test.csv",sep='\t')
+
+    # line14 = train_data[train_data["Route"] == 14]
+    predictor = LppPrediction(train_data)
+    trained_data = predictor.create_classifiers()
+    testing_data = predictor.preprocess_test_data(test_data)
+    for row,line_idx in zip(testing_data.values,test_data["Route"].values):
+        print(predictor(row,line_idx))
+    # train_data = train_data[train_data["Route"] == 14]
+    # train_df,trained_avg_hour,trained_driver_dev_from_avg = preprocess_data(train_data)
+    #
+    # # print(crossvalidate(train_df,train_data))
+    #
+    # #
+    # #
+    # test_df,not1,not2 = preprocess_data(test_data,train=False,trained_driver_dev = trained_driver_dev_from_avg, trained_avg_time = trained_avg_hour)
+    # print("Starting to predict arrival times...")
+    # vals = train_df[features].values
+    # # classifier = model(vals,train_df["target_var"])
+    # # print("Model thetas: " + str(list(classifier.th)))
+    # # classifier.th[2] = classifier.th[3] * 2
+    # poly = PolynomialFeatures(degree=2)
+    # X_ = poly.fit_transform(vals)
+    # predict_ = poly.fit_transform(test_df[features].values)
+    #
+    # clf = linear_model.LinearRegression()
+    # clf.fit(X_, train_df["target_var"])
+    # pred_seconds = clf.predict(predict_)
+    #
+    # i = 0
+    # for row in range(len(pred_seconds)):
+    #     deltas = pred_seconds[row]
+    #     print(get_datetime(test_data["Departure time"].values[i]) + timedelta(seconds = deltas))
+    #     i += 1
 
 
-
-
-
-
-
-    test_df,not1,not2 = preprocess_data(test_data,train=False,trained_driver_dev = trained_driver_dev_from_avg, trained_avg_time = trained_avg_hour)
-    print("Starting to predict arrival times...")
-    model = LinearLearner(lambda_=1.0)
-    classifier = model(train_df[features].values,train_df["target_var"])
-
-    i = 0
-    for row in test_df[features].values:
-        deltas = classifier(row)
-        print(get_datetime(test_data["Departure time"].values[i]) + timedelta(seconds = deltas))
-        i += 1
+    #
+    # test_df,not1,not2 = preprocess_data(test_data,train=False,trained_driver_dev = trained_driver_dev_from_avg, trained_avg_time = trained_avg_hour)
+    # print("Starting to predict arrival times...")
+    # model = LinearLearner(lambda_=1.0)
+    # classifier = model(train_df[features].values,train_df["target_var"])
+    #
+    # i = 0
+    # for row in test_df[features].values:
+    #     deltas = classifier(row)
+    #     print(get_datetime(test_data["Departure time"].values[i]) + timedelta(seconds = deltas))
+    #     i += 1
 

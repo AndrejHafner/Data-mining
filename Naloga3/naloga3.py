@@ -198,15 +198,25 @@ def crossvalidate(df,data):
 
 
 if __name__ == "__main__":
-    train_data = pd.read_csv("data/train.csv", sep='\t').sample(frac=0.01, random_state=42).reset_index(drop=True)
-    test_data = pd.read_csv("data/test.csv",sep='\t')
+    train_data = pd.read_csv("data/train.csv", sep='\t')#.sample(frac=0.01, random_state=42).reset_index(drop=True)
+    test_data = pd.read_csv("data/test.csv",sep='\t')#.sample(frac=0.001, random_state=42).reset_index(drop=True)
 
+
+    train_data = train_data[train_data.apply(lambda x: get_datetime(x["Departure time"]).month in [1,10,11],axis=1)].reset_index(drop=True)
     # line14 = train_data[train_data["Route"] == 14]
     predictor = LppPrediction(train_data)
     trained_data = predictor.create_classifiers()
     testing_data = predictor.preprocess_test_data(test_data)
-    for row,line_idx in zip(testing_data.values,test_data["Route"].values):
-        print(predictor(row,line_idx))
+    testing_features = list(testing_data.keys())
+    for row,line_idx,dep_time in zip(testing_data.values,test_data["Route"].values,test_data["Departure time"].values):
+        line_features = set(predictor.line_features[line_idx])
+        intersection_features = line_features & set(testing_features)
+        line_features_idx = [i for i, e in enumerate(testing_features) if e in line_features]
+        zeros_to_add = abs(len(line_features - intersection_features))
+        entry = row[line_features_idx]
+        entry = np.ravel(entry)
+        entry = np.pad(entry,(0,zeros_to_add),"constant")
+        print(get_datetime(dep_time) +  timedelta(seconds = predictor(entry,line_idx)))
     # train_data = train_data[train_data["Route"] == 14]
     # train_df,trained_avg_hour,trained_driver_dev_from_avg = preprocess_data(train_data)
     #

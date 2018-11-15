@@ -1,17 +1,25 @@
 from Naloga3.linear import LinearLearner
+from concurrent.futures import ProcessPoolExecutor
 import pandas as pd
 import numpy as np
 import time
+import psutil
+import os
 
 from Naloga3.lpputils import get_datetime, tsdiff
 
+def limit_cpu():
+    p = psutil.Process(os.getpid())
+    p.nice(psutil.BELOW_NORMAL_PRIORITY_CLASS)
 
 class LppPrediction(object):
 
     holidays = ["1.1", "2.1", "8.2", "27.4", "1.5", "2.5", "25.6", "15.8", "31.10", "1.11", "25.12", "26.12", "31.12"]
 
     seasons = ["winter", "spring", "summer", "fall"]
-    y_dependent_features = ["hour_avg", "driver_dev_from_avg"]
+    onehot_encoded_features = ["dep_route"]
+    #"hour_avg", "driver_dev_from_avg"
+    y_dependent_features = []
     y_independent_features = ["dep_hour_sin", "dep_hour_cos", "dep_minute_sin", "dep_minute_cos", "weekends_holidays",
                 "dep_month_sin", "dep_month_cos", "rush_hour"] + seasons
     features = y_dependent_features + y_dependent_features
@@ -20,6 +28,7 @@ class LppPrediction(object):
         self.data = data
         self.lines = list(set(self.data["Route"]))
         self.classifiers = dict.fromkeys(self.lines)
+        self.line_features = dict.fromkeys(self.lines)
         self.trained = False
         self.trained_avg_hour = []
         self.trained_driver_dev_from_avg = dict()
@@ -33,22 +42,32 @@ class LppPrediction(object):
 
         print("Started creating classifiers...")
         start_time = time.time()
-        k = 1
-        # Create classifier for each line
-        for line in self.lines:
-            line_data = self.data[self.data["Route"] == line].reset_index(drop=True)
-            train_df,y = self.preprocess_train_data(line_data)
-            model = LineLearner()
-            self.classifiers[line] = model(train_df.values,y)
-            print("Created classifier %d of %d." % (k,len(self.lines)))
-            k += 1
+
+        lines_data = [self.data[self.data["Route"] == line].reset_index(drop=True) for line in self.lines]
+
+        # Spread the workload among the cores of processors to speed up processing
+        with ProcessPoolExecutor(max_workers=4) as executor:
+            for classifier,line_features,line in executor.map(self.create_single_classifier,lines_data,self.lines):
+                self.classifiers[line] = classifier
+                self.line_features[line] = line_features
+
+        self.trained = True
 
         print("Finished creating classifiers in %dm %ss." % ((time.time() - start_time) // 60,round(time.time() - start_time) % 60))
 
+    def create_single_classifier(self,line_data,line):
+        limit_cpu()
+        train_df, y = self.preprocess_train_data(line_data)
+        model = LineLearner()
+        classifier = model(train_df.values, y)
+        line_features = list(train_df.keys())
+        print("Created classifier %d of %d." % (line,len(self.lines)))
+        return classifier,line_features,line
 
 
     def preprocess_independent_data(self,data):
         dataframe = pd.DataFrame(columns=self.y_independent_features)
+
 
 
         # # FEATURE = departure hour
@@ -114,12 +133,19 @@ class LppPrediction(object):
 
         half_hour_idx = 23
 
-        dataframe["hour_avg"] = np.array(list(map(
-            lambda x: self.trained_avg_hour[get_datetime(x).hour] if get_datetime(x).minute < 30 else
-            self.trained_avg_hour[get_datetime(x).hour + half_hour_idx], data["Departure time"])))
-        dataframe["driver_dev_from_avg"] = np.array(list(
-            map(lambda x: self.trained_driver_dev_from_avg[str(x)] if str(x) in self.trained_driver_dev_from_avg.keys() else 0.0,
-                data["Driver ID"])))
+        if "hour_avg" in self.y_dependent_features:
+            dataframe["hour_avg"] = np.array(list(map(
+                lambda x: self.trained_avg_hour[get_datetime(x).hour] if get_datetime(x).minute < 30 else
+                self.trained_avg_hour[get_datetime(x).hour + half_hour_idx], data["Departure time"])))
+
+        if "driver_dev_from_avg" in self.y_dependent_features:
+            dataframe["driver_dev_from_avg"] = np.array(list(
+                map(lambda x: self.trained_driver_dev_from_avg[str(x)] if str(x) in self.trained_driver_dev_from_avg.keys() else 0.0,
+                    data["Driver ID"])))
+
+        if "dep_route" in self.onehot_encoded_features:
+            df_dep_route = pd.get_dummies(data["Route Direction"])
+            dataframe = pd.concat([dataframe,df_dep_route],axis=1,sort=False)
 
         return dataframe
 
@@ -150,10 +176,10 @@ class LppPrediction(object):
         self.trained_avg_hour = avg_time
 
         # dataframe["target_var"] = np.array(list(map(lambda x: avg_time[get_datetime(x).hour] if get_datetime(x).minute < 30 else avg_time[get_datetime(x).hour+24], data["Departure time"])))
-
-        dataframe["hour_avg"] = np.array(list(map(
-            lambda x: avg_time[get_datetime(x).hour] if get_datetime(x).minute < 30 else avg_time[
-                get_datetime(x).hour + half_hour_idx], data["Departure time"])))
+        if "hour_avg" in self.y_dependent_features:
+            dataframe["hour_avg"] = np.array(list(map(
+                lambda x: avg_time[get_datetime(x).hour] if get_datetime(x).minute < 30 else avg_time[
+                    get_datetime(x).hour + half_hour_idx], data["Departure time"])))
 
         # Find slow drivers
         driver_ids = set(data["Driver ID"])
@@ -178,7 +204,12 @@ class LppPrediction(object):
             elif diff > thresh:
                 slow_drivers.append(id)
         self.trained_driver_dev_from_avg = driver_diff
-        dataframe["driver_dev_from_avg"] = np.array(list(map(lambda x: driver_diff[str(x)], data["Driver ID"])))
+        if "hour_avg" in self.y_dependent_features:
+            dataframe["hour_avg"] = np.array(list(map(lambda x: driver_diff[str(x)], data["Driver ID"])))
+
+        if "dep_route" in self.onehot_encoded_features:
+            df_dep_route = pd.get_dummies(data["Route Direction"])
+            dataframe = pd.concat([dataframe,df_dep_route],axis=1,sort=False)
 
         y = np.array(list(
             map(lambda x, y: abs(tsdiff(get_datetime(x), get_datetime(y))), data["Departure time"],

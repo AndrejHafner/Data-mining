@@ -21,7 +21,7 @@ class LppPrediction(object):
     #"hour_avg", "driver_dev_from_avg"
     y_dependent_features = []
     y_independent_features = ["dep_hour_sin", "dep_hour_cos", "dep_minute_sin", "dep_minute_cos", "weekends_holidays",
-                "dep_month_sin", "dep_month_cos", "rush_hour"] + seasons
+                "dep_month_sin", "dep_month_cos", "rush_hour"]
     features = y_dependent_features + y_dependent_features
 
     def __init__(self,data):

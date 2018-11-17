@@ -16,12 +16,11 @@ class LppPrediction(object):
 
     holidays = ["1.1", "2.1", "8.2", "27.4", "1.5", "2.5", "25.6", "15.8", "31.10", "1.11", "25.12", "26.12", "31.12"]
 
-    seasons = ["winter", "spring", "summer", "fall"]
-    onehot_encoded_features = ["dep_route"]
+    onehot_encoded_features = ["dep_route","precipitation"]
     #"hour_avg", "driver_dev_from_avg"
     y_dependent_features = []
     y_independent_features = ["dep_hour_sin", "dep_hour_cos", "dep_minute_sin", "dep_minute_cos", "weekends_holidays",
-                "dep_month_sin", "dep_month_cos", "rush_hour"]
+                "dep_month_sin", "dep_month_cos", "rush_hour"] #+seasons
     features = y_dependent_features + y_dependent_features
 
     def __init__(self,data):
@@ -121,6 +120,13 @@ class LppPrediction(object):
             dataframe["weekends_holidays"] = np.array(list(map(lambda x: 1 if (get_datetime(x).weekday() >= 5 or (
                     "%d.%d" % (get_datetime(x).day, get_datetime(x).month)) in self.holidays) else 0,
                                                                data["Departure time"])))
+
+        if "precipitation" in self.onehot_encoded_features:
+            data["precipitation"] = pd.Categorical(data["precipitation"],categories=["rain","snow","rain_and_snow"])
+            df_precipitation = pd.get_dummies(data["precipitation"])
+            dataframe = pd.concat([dataframe,df_precipitation],axis=1,sort=False)
+
+
         return dataframe
 
     def preprocess_test_data(self,data):

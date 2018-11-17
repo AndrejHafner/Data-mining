@@ -56,17 +56,29 @@ def crossvalidate(df,data):
 
     return sum(errors) / len(errors)
 
-
+def get_precipitation_for_date(weather_data,date):
+    dt = get_datetime(date)
+    row = weather_data[weather_data["date"] == dt.strftime("%d.%m.%Y")]
+    return "" if len(row) == 0 else row["precipitation"].values.ravel()[0]
 
 
 
 
 if __name__ == "__main__":
-    train_data = pd.read_csv("data/train.csv", sep='\t')#.sample(frac=0.01, random_state=42).reset_index(drop=True)
+    train_data = pd.read_csv("data/train.csv", sep='\t')#".sample(frac=0.01, random_state=42).reset_index(drop=True)
     test_data = pd.read_csv("data/test.csv",sep='\t')#".sample(frac=0.01, random_state=42).reset_index(drop=True)
+    weather_data = pd.read_csv("data/weather_data.csv",sep=';')
 
+    #k = get_precipitation_for_date(weather_data,"2012-12-16 13:09:33.000")
     #TODO
-    train_data = train_data[train_data.apply(lambda x: get_datetime(x["Departure time"]).month in [1,10,11],axis=1)].reset_index(drop=True)
+    train_data = train_data[train_data.apply(lambda x: get_datetime(x["Departure time"]).month in [1,2,10,11],axis=1)].reset_index(drop=True)
+    # train_data = train_data[(train_data['Departure time'] < datetime.date(2012,month = 1,day = 1)) & (df['date']<datetime.date(2016,3,1))]
+
+    # Add weather data
+    train_data["precipitation"] = np.array(
+                list(map(lambda x: get_precipitation_for_date(weather_data,x), train_data["Departure time"])))
+    test_data["precipitation"] = np.array(
+        list(map(lambda x: get_precipitation_for_date(weather_data, x), test_data["Departure time"])))
 
     predictor = LppPrediction(train_data)
     trained_data = predictor.create_classifiers()
@@ -85,13 +97,6 @@ if __name__ == "__main__":
                 del row_features_idx[0]
             else:
                 entry[i] = 0.0
-
-        #entry = np.array([row[i] if i in line_features_idx else -666 for i in range(len(line_features))])
-        # zeros_to_add = abs(len(set(line_features) - intersection_features))
-        # #FIXME pravilno dodanje ničel na prava mesta?
-        # entry = row[line_features_idx]
-        # entry = np.ravel(entry)
-        # entry = np.pad(entry,(0,zeros_to_add),"constant")
         print(get_datetime(dep_time) +  timedelta(seconds = predictor(entry,line_idx)))
 
         # BEFORE

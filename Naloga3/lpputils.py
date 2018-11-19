@@ -1,7 +1,7 @@
 from datetime import datetime,timedelta
 
 DATETIME_FORMAT = "%Y-%m-%d %H:%M:%f"
-
+# Created by lab assistan - Andrej Čopar
 def parsedate(x):
     if not isinstance(x, datetime):
         x = datetime.datetime.strptime(x, DATETIME_FORMAT)

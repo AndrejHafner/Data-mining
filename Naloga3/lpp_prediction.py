@@ -1,3 +1,4 @@
+
 from Naloga3.linear import LinearLearner
 from concurrent.futures import ProcessPoolExecutor
 import pandas as pd
@@ -5,7 +6,7 @@ import numpy as np
 import time
 import psutil
 import os
-
+import calendar
 from Naloga3.lpputils import get_datetime, tsdiff
 
 def limit_cpu():
@@ -14,14 +15,16 @@ def limit_cpu():
 
 class LppPrediction(object):
 
-    holidays = ["1.1", "2.1", "8.2", "27.4", "1.5", "2.5", "25.6", "15.8", "31.10", "1.11", "25.12", "26.12", "31.12"]
+    holidays = ["1.1", "2.1", "8.2", "27.4", "1.5", "2.5", "25.6", "15.8","29.10","30.10", "31.10", "1.11","2.11","21.12","24,12", "25.12","31.12"]
 
-    onehot_encoded_features = ["dep_route","precipitation"]
-    #"hour_avg", "driver_dev_from_avg"
+    onehot_encoded_features = ["dep_station","arr_station","precipitation","driver","hours","dep_route","minutes"] # 166.6 without precip
+    #"hour_avg", "driver_dev_from_avg","days","minutes","days","months","dep_route",
     y_dependent_features = []
-    y_independent_features = ["dep_hour_sin", "dep_hour_cos", "dep_minute_sin", "dep_minute_cos", "weekends_holidays",
-                "dep_month_sin", "dep_month_cos", "rush_hour"] #+seasons
-    features = y_dependent_features + y_dependent_features
+    y_independent_features = ["weekends","holidays", "rush_hour","dep_day_sin","dep_day_cos" ,"dep_month_sin", "dep_month_cos"] #+seasons
+    # ,"dep_day_sin","dep_day_cos",,"dep_minute_sin","dep_minute_cos"
+    #                 "dep_month_sin", "dep_month_cos",
+    # ,"dep_hour_sin", "dep_hour_cos",
+    features = y_dependent_features + y_independent_features
 
     def __init__(self,data):
         self.data = data
@@ -67,8 +70,14 @@ class LppPrediction(object):
     def preprocess_independent_data(self,data):
         dataframe = pd.DataFrame(columns=self.y_independent_features)
 
+        # dataframe["dep_minute"] = np.array(list(map(lambda x: 0.0 if get_datetime(x).minute < 30 else 1.0,data["Departure time"])))
+        if "dep_minute_sin" in self.y_independent_features:
+            dataframe["dep_minute_sin"] = np.array(
+                list(map(lambda x: np.sin(get_datetime(x).minute * (2.0 * np.pi / 60)), data["Departure time"])))
 
-
+        if "dep_minute_cos" in self.y_independent_features:
+            dataframe["dep_minute_cos"] = np.array(
+                list(map(lambda x: np.cos(get_datetime(x).minute * (2.0 * np.pi / 60)), data["Departure time"])))
         # # FEATURE = departure hour
         if "dep_hour_sin" in self.y_independent_features:
             dataframe["dep_hour_sin"] = np.array(
@@ -78,14 +87,13 @@ class LppPrediction(object):
             dataframe["dep_hour_cos"] = np.array(
                list(map(lambda x: np.cos(get_datetime(x).hour * (2.0 * np.pi / 24)), data["Departure time"])))
 
-        # dataframe["dep_minute"] = np.array(list(map(lambda x: 0.0 if get_datetime(x).minute < 30 else 1.0,data["Departure time"])))
-        if "dep_minute_sin" in self.y_independent_features:
-            dataframe["dep_minute_sin"] = np.array(
-                list(map(lambda x: np.sin(get_datetime(x).minute * (2.0 * np.pi / 60)), data["Departure time"])))
+        if "dep_day_sin" in self.y_independent_features:
+            dataframe["dep_day_sin"] = np.array(
+                list(map(lambda x: np.sin(get_datetime(x).day * (2.0 * np.pi / calendar.monthrange(2012, get_datetime(x).month)[1])), data["Departure time"])))
 
-        if "dep_minute_cos" in self.y_independent_features:
-            dataframe["dep_minute_cos"] = np.array(
-                list(map(lambda x: np.cos(get_datetime(x).minute * (2.0 * np.pi / 60)), data["Departure time"])))
+        if "dep_day_cos" in self.y_independent_features:
+            dataframe["dep_day_cos"] = np.array(
+               list(map(lambda x: np.cos(get_datetime(x).day * (2.0 * np.pi / calendar.monthrange(2012, get_datetime(x).month)[1])), data["Departure time"])))
 
         # dataframe["dep_month"] = np.array(list(map(lambda x: 1.0 if get_datetime(x).month in [11,12] else 0.0,data["Departure time"])))
         if "dep_month_sin" in self.y_independent_features:
@@ -114,17 +122,44 @@ class LppPrediction(object):
 
         if "rush_hour" in self.y_independent_features:
             dataframe["rush_hour"] = np.array(
-                list(map(lambda x: 1 if get_datetime(x).hour in [6, 7, 8, 15, 16, 17] else 0, data["Departure time"])))
+                list(map(lambda x: 1 if get_datetime(x).hour in [6, 7, 8, 15, 16, 17] and get_datetime(x).weekday() < 5 else 0, data["Departure time"])))
 
-        if "weekends_holidays" in self.y_independent_features:
-            dataframe["weekends_holidays"] = np.array(list(map(lambda x: 1 if (get_datetime(x).weekday() >= 5 or (
-                    "%d.%d" % (get_datetime(x).day, get_datetime(x).month)) in self.holidays) else 0,
+        if "weekends" in self.y_independent_features:
+            dataframe["weekends"] = np.array(list(map(lambda x: 1 if get_datetime(x).weekday() >= 5 else 0,
                                                                data["Departure time"])))
 
+        if "holidays" in self.y_independent_features:
+            dataframe["holidays"] = np.array(list(map(lambda x: 1 if ("%d.%d" % (get_datetime(x).day, get_datetime(x).month) in self.holidays) else 0,
+                                                      data["Departure time"])))
+
         if "precipitation" in self.onehot_encoded_features:
-            data["precipitation"] = pd.Categorical(data["precipitation"],categories=["rain","snow","rain_and_snow"])
+            data["precipitation"] = pd.Categorical(data["precipitation"],categories=["rain","snow"])
             df_precipitation = pd.get_dummies(data["precipitation"])
             dataframe = pd.concat([dataframe,df_precipitation],axis=1,sort=False)
+
+        if "driver" in self.onehot_encoded_features:
+            df_driver = pd.get_dummies(data["Driver ID"],prefix="driver_")
+            dataframe = pd.concat([dataframe,df_driver],axis=1,sort=False)
+
+        if "registration" in self.onehot_encoded_features:
+            df_registration = pd.get_dummies(data["Registration"], prefix="reg_")
+            dataframe = pd.concat([dataframe, df_registration], axis=1, sort=False)
+
+        if "hours" in self.onehot_encoded_features:
+            df_hours = pd.get_dummies(list(map(lambda x: get_datetime(x).hour , data["Departure time"])), prefix="hour_")
+            dataframe = pd.concat([dataframe, df_hours], axis=1, sort=False)
+
+        if "minutes" in self.onehot_encoded_features:
+            df_minutes = pd.get_dummies(list(map(lambda x: (get_datetime(x).minute // 20) + 1 , data["Departure time"])), prefix="minutes_")
+            dataframe = pd.concat([dataframe, df_minutes], axis=1, sort=False)
+
+        if "days" in self.onehot_encoded_features:
+            df_days = pd.get_dummies(list(map(lambda x: get_datetime(x).day , data["Departure time"])), prefix="day_")
+            dataframe = pd.concat([dataframe, df_days], axis=1, sort=False)
+
+        if "months" in self.onehot_encoded_features:
+            df_month = pd.get_dummies(list(map(lambda x: get_datetime(x).month , data["Departure time"])), prefix="month_")
+            dataframe = pd.concat([dataframe, df_month], axis=1, sort=False)
 
 
         return dataframe
@@ -148,6 +183,14 @@ class LppPrediction(object):
             dataframe["driver_dev_from_avg"] = np.array(list(
                 map(lambda x: self.trained_driver_dev_from_avg[str(x)] if str(x) in self.trained_driver_dev_from_avg.keys() else 0.0,
                     data["Driver ID"])))
+
+        if "dep_station" in self.onehot_encoded_features:
+            df_dep_station = pd.get_dummies(data["First station"],prefix="dep_station_")
+            dataframe = pd.concat([dataframe,df_dep_station],axis=1,sort=False)
+
+        if "arr_station" in self.onehot_encoded_features:
+            df_arr_station = pd.get_dummies(data["Last station"],prefix="arr_station_")
+            dataframe = pd.concat([dataframe,df_arr_station],axis=1,sort=False)
 
         if "dep_route" in self.onehot_encoded_features:
             df_dep_route = pd.get_dummies(data["Route Direction"])
@@ -213,13 +256,31 @@ class LppPrediction(object):
         if "hour_avg" in self.y_dependent_features:
             dataframe["hour_avg"] = np.array(list(map(lambda x: driver_diff[str(x)], data["Driver ID"])))
 
+        if "dep_station" in self.onehot_encoded_features:
+            df_dep_station = pd.get_dummies(data["First station"],prefix="dep_station_")
+            dataframe = pd.concat([dataframe,df_dep_station],axis=1,sort=False)
+
+        if "arr_station" in self.onehot_encoded_features:
+            df_arr_station = pd.get_dummies(data["Last station"],prefix="arr_station_")
+            dataframe = pd.concat([dataframe,df_arr_station],axis=1,sort=False)
+
         if "dep_route" in self.onehot_encoded_features:
             df_dep_route = pd.get_dummies(data["Route Direction"])
             dataframe = pd.concat([dataframe,df_dep_route],axis=1,sort=False)
 
+
+
         y = np.array(list(
             map(lambda x, y: abs(tsdiff(get_datetime(x), get_datetime(y))), data["Departure time"],
                 data["Arrival time"])))
+
+        remove_idx = []
+        for i in range(len(y)):
+            if y[i] > 60*60*2:
+                remove_idx.append(i)
+
+        y = np.delete(y,remove_idx,0)
+        dataframe = dataframe.drop(remove_idx).reset_index(drop=True)
 
         self.trained = True
         return dataframe,y
@@ -227,6 +288,6 @@ class LppPrediction(object):
 
 class LineLearner(object):
 
-    def __call__(self,X,Y,_lambda=1.0):
+    def __call__(self,X,Y,_lambda=0.01):
         model = LinearLearner(lambda_=_lambda)
         return model(X,Y)

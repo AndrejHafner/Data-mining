@@ -1,4 +1,3 @@
-
 from Naloga3.linear import LinearLearner
 from concurrent.futures import ProcessPoolExecutor
 import pandas as pd

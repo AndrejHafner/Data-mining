@@ -1,0 +1,115 @@
+% To je predloga za poročila o domačih nalogah pri predmetih, katerih
+% nosilec je Blaž Zupan. Seveda lahko tudi dodaš kakšen nov, zanimiv
+% in uporaben element, ki ga v tej predlogi (še) ni. Več o LaTeX-u izveš na
+% spletu, na primer na http://tobi.oetiker.ch/lshort/lshort.pdf.
+%
+% To predlogo lahko spremeniš v PDF dokument s pomočjo programa
+% pdflatex, ki je del standardne instalacije LaTeX programov.
+
+\documentclass[a4paper,11pt]{article}
+\usepackage{a4wide}
+\usepackage{fullpage}
+\usepackage[utf8x]{inputenc}
+\usepackage[slovene]{babel}
+\selectlanguage{slovene}
+\usepackage[toc,page]{appendix}
+\usepackage[pdftex]{graphicx} % za slike
+\usepackage{setspace}
+\usepackage{color}
+\definecolor{light-gray}{gray}{0.95}
+\usepackage{listings} % za vključevanje kode
+\usepackage{hyperref}
+\usepackage{titlesec}
+
+\renewcommand{\baselinestretch}{1.2} % za boljšo berljivost večji razmak
+\renewcommand{\appendixpagename}{\normalfont\Large\bfseries{Priloge}}
+
+
+\titleformat{name=\section}[runin]
+  {\normalfont\bfseries}{}{0em}{}
+\titleformat{name=\subsection}[runin]
+  {\normalfont\bfseries}{}{0em}{}
+
+
+% header
+\makeatletter
+\def\@maketitle{%
+  \noindent
+  \begin{minipage}{2in}
+  \@author
+  \end{minipage}
+  \hfill
+  \begin{minipage}{1.2in}
+  \textbf{\@title}
+  \end{minipage}
+  \hfill
+  \begin{minipage}{1.2in}
+  \@date
+  \end{minipage}
+  \par
+  \vskip 1.5em}
+\makeatother
+
+
+\lstset{ % nastavitve za izpis kode, sem lahko tudi kaj dodaš/spremeniš
+language=Python,
+basicstyle=\footnotesize,
+basicstyle=\ttfamily\footnotesize\setstretch{1},
+backgroundcolor=\color{light-gray},
+}
+
+
+% Naloga
+\title{Naloga 3}
+% Ime Priimek (vpisna)
+\author{Andrej Hafner (63160122)}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+
+
+\section{Uvod}
+Izziv je bil izgradnja modela z uporabo linearne regresije, ki bi čim bolj točno napovedala prihode LPP avtobusov v decembru 2012.
+
+
+\normalfont
+\section{Ocenjevanje točnosti}
+Za preverjanje točnosti na učnih podatkih sem implementiral prečno preverjanje. Izvajalo se je desetkratno prečno preverjanje, kjer se je 10\% podatkov uporabilo za testiranje, 90\% pa za učenje. V vsaki iteraciji so se te deli zamenjali zaporedoma, nato pa so se ponovno naučili modeli za posamezne linije. Napovedan je bil čas trajanja vožnje, ki je bil prištet odhodnem času, potem pa je bila izračunana napaka napovedanega časa na podlagi dejanskega časa prihoda. Uporabljena je bila mera za napako mean absolute error.
+
+\section{Napovedni modeli}
+\begin{list}{label}{}
+	\item[\textbf{One hot encoding}] Za definiranje atributov iz podatkov, ki predstavljajo določene kategorije, sem uporabil one hot encoding. Tako vsaka možna vrednost dobi svoj stolpec, in če ta atribut zavzame to vrednost ima ta atribut vrednost 1, sicer pa 0. To sem uporabil za predstavitev odhodne postaje, prihodne postaje, smeri vožnje, voznika, ure vožnje in vremenske razmere. 
+	\item[\textbf{Krožne vrednosti}] Za učinkovito predstavitev minut,ur, dnevov in mesecev sem uporabil sinus in kosinus. Če bi na primer za atribut ura odhoda uporabil vrednosti od 0 do 23, bi to pomenilo da sta 0 in 23 najbolj oddaljena med seboj, čeprav sta zelo zelo skupaj. Ta problem lahko rešimo z dodajanjem dveh atributov, kosinusa normalizirane ure in sinusa normalizirane ure. S tem rešimo problem standardizacije spremenljivke, poleg tega pa je reprezentacija bolj pravilna. Na koncu je bilo to uporabljeno za dneve in mesece, saj se je izkazalo da je za ure bolj učinkovita metoda One hot encoding.
+	\item[\textbf{Vreme}] Dodal sem podatke o vremenu iz leta 2012.  Uporabil sem preprost One hot encoding za atributa dež in sneg. Izkazalo se je da ni bilo dosti boljše izboljšave rezultate, mislim da zaradi pomanjkanja dnevov, v katerih bi snežilo v učnih podatkih. 
+\end{list}
+
+\section{Rezultati}
+
+\begin{table}[htbp]
+	\caption{Tabela rezultatov}
+	\label{tab1}
+	\begin{center}
+		\begin{tabular}{llllp{4cm}}
+			\hline
+				metoda & oddaja & ocena - učni & ocena - strežnik & komentar \\
+				\hline
+				One hot encoding* & prediction13.txt & 150.43 & 180.51 & Najbolj uspešna metoda, dodan še voznik in obe postaji.\\
+				Krožne vrednosti & predition4.txt & 166.32 & 193.45 & Izboljšanje zaradi dodajanja sinusa in kosinusa. \\
+				Vreme & predition8.txt & 161.32 & 191.59 & Poslabšanje rezultata za 1 piko po dodajanju vremena. \\
+			
+		\end{tabular}
+	\end{center}
+\end{table}
+
+\pagebreak
+
+
+
+\section{Izjava o izdelavi domače naloge.}
+Domačo nalogo in pripadajoče programe sem izdelal sam.
+
+
+\end{document}

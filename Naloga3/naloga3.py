@@ -65,7 +65,7 @@ def get_precipitation_for_date(weather_data,date):
 
 
 if __name__ == "__main__":
-    train_data = pd.read_csv("data/train.csv", sep='\t')#.sample(frac=0.1, random_state=42).reset_index(drop=True)
+    train_data = pd.read_csv("data/train.csv", sep='\t')# FOR CROSSVALIDATION .sample(frac=0.1, random_state=42).reset_index(drop=True)
     test_data = pd.read_csv("data/test.csv",sep='\t')#.sample(frac=0.01, random_state=42).reset_index(drop=True)
     weather_data = pd.read_csv("data/weather_data.csv",sep=';')
 
@@ -78,9 +78,10 @@ if __name__ == "__main__":
     test_data["precipitation"] = np.array(
         list(map(lambda x: get_precipitation_for_date(weather_data, x), test_data["Departure time"])))
 
-    #print(crossvalidate(train_data))
+    # CROSS VALIDATION
+    # print(crossvalidate(train_data))
 
-
+    # Prediction for test data (pipe for output to txt file)
     predictor = LppPrediction(train_data)
     trained_data = predictor.create_classifiers()
     testing_data = predictor.preprocess_test_data(test_data)

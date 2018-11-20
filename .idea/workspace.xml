@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7bf2d6c8-945e-47c4-92ea-5172f5c772a4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Naloga3/data/weather_data.csv" beforeDir="false" afterPath="$PROJECT_DIR$/Naloga3/data/weather_data.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Naloga3/lpp_prediction.py" beforeDir="false" afterPath="$PROJECT_DIR$/Naloga3/lpp_prediction.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Naloga3/lpputils.py" beforeDir="false" afterPath="$PROJECT_DIR$/Naloga3/lpputils.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Naloga3/naloga3.py" beforeDir="false" afterPath="$PROJECT_DIR$/Naloga3/naloga3.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -40,7 +37,7 @@
     <session id="1464309864">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="4" />
+          <entry key="project.closed" value="5" />
           <entry key="project.open.time.0" value="1" />
           <entry key="project.open.time.11" value="1" />
           <entry key="project.open.time.14" value="2" />
@@ -55,14 +52,14 @@
           <entry key="Python Console" value="53" />
           <entry key="csv" value="5" />
           <entry key="gitignore" value="29" />
-          <entry key="py" value="31413" />
-          <entry key="txt" value="658" />
+          <entry key="py" value="31519" />
+          <entry key="txt" value="677" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="PLAIN_TEXT" value="692" />
-          <entry key="Python" value="31466" />
+          <entry key="PLAIN_TEXT" value="711" />
+          <entry key="Python" value="31572" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -92,16 +89,15 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/Naloga3/lpp_prediction.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="453">
-                  <caret line="186" column="57" lean-forward="true" selection-start-line="186" selection-start-column="57" selection-end-line="186" selection-end-column="57" />
+                <state relative-caret-position="76">
+                  <caret line="4" column="11" selection-start-line="4" selection-start-column="11" selection-end-line="4" selection-end-column="11" />
                   <folding>
-                    <element signature="e#1#41#0" expanded="true" />
-                    <marker date="1542666328546" expanded="true" signature="334:336" ph="..." />
-                    <marker date="1542666328546" expanded="true" signature="1497:1580" ph="..." />
-                    <marker date="1542666328546" expanded="true" signature="2389:2715" ph="..." />
-                    <marker date="1542666328546" expanded="true" signature="8429:8435" ph="..." />
-                    <marker date="1542666328546" expanded="true" signature="10034:10040" ph="..." />
-                    <marker date="1542666328546" expanded="true" signature="10077:10086" ph="..." />
+                    <marker date="1542670360328" expanded="true" signature="333:335" ph="..." />
+                    <marker date="1542670360328" expanded="true" signature="1496:1579" ph="..." />
+                    <marker date="1542670360328" expanded="true" signature="2388:2714" ph="..." />
+                    <marker date="1542670360328" expanded="true" signature="8428:8434" ph="..." />
+                    <marker date="1542670360328" expanded="true" signature="10033:10039" ph="..." />
+                    <marker date="1542670360328" expanded="true" signature="10076:10085" ph="..." />
                   </folding>
                 </state>
               </provider>
@@ -133,15 +129,19 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Naloga3/score_recognition/scores.html">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="636">
-                  <caret line="107" selection-start-line="107" selection-end-line="107" />
+                <state relative-caret-position="512">
+                  <caret line="121" selection-start-line="121" selection-end-line="121" />
                 </state>
               </provider>
             </entry>
           </file>
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Naloga3/score_recognition/scores_altered.html">
-              <provider selected="true" editor-type-id="text-editor" />
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="2166">
+                  <caret line="114" column="17" selection-start-line="114" selection-start-column="17" selection-end-line="114" selection-end-column="17" />
+                </state>
+              </provider>
             </entry>
           </file>
           <file pinned="false" current-in-tab="false">
@@ -177,12 +177,12 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/Naloga3/naloga3.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="365">
-                  <caret line="70" lean-forward="true" selection-start-line="70" selection-end-line="70" />
+                <state relative-caret-position="485">
+                  <caret line="83" column="60" selection-start-line="83" selection-start-column="60" selection-end-line="83" selection-end-column="60" />
                   <folding>
                     <element signature="e#0#18#0" expanded="true" />
-                    <marker date="1542666328489" expanded="true" signature="192:194" ph="..." />
-                    <marker date="1542666328489" expanded="true" signature="2102:2288" ph="..." />
+                    <marker date="1542670339320" expanded="true" signature="192:194" ph="..." />
+                    <marker date="1542670339320" expanded="true" signature="2102:2288" ph="..." />
                   </folding>
                 </state>
               </provider>
@@ -224,8 +224,8 @@
         <option value="$PROJECT_DIR$/Naloga3/lpputils.py" />
         <option value="$PROJECT_DIR$/Naloga3/score_recognition/scores_altered.html" />
         <option value="$PROJECT_DIR$/Naloga3/score_recognition/scores.html" />
-        <option value="$PROJECT_DIR$/Naloga3/lpp_prediction.py" />
         <option value="$PROJECT_DIR$/Naloga3/naloga3.py" />
+        <option value="$PROJECT_DIR$/Naloga3/lpp_prediction.py" />
       </list>
     </option>
   </component>
@@ -236,8 +236,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="1256" />
-    <option name="y" value="64" />
+    <option name="x" value="3098" />
+    <option name="y" value="-40" />
     <option name="width" value="1382" />
     <option name="height" value="744" />
   </component>
@@ -556,19 +556,25 @@
       <option name="project" value="LOCAL" />
       <updated>1542453570526</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="Final version">
+      <created>1542666470205</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1542666470205</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="2576" height="1056" extended-state="6" />
-    <editor active="true" />
+    <frame x="2552" y="-138" width="1936" height="1176" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.09648438" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.12864584" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32899022" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49921876" weight="0.26818675" />
+      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.49921876" weight="0.23727186" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.49960256" weight="0.34527686" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -635,7 +641,8 @@
     <MESSAGE value="Solved issue with one hot encoding when classifying test data." />
     <MESSAGE value="Added weather data" />
     <MESSAGE value="Added predictions" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added predictions" />
+    <MESSAGE value="Final version" />
+    <option name="LAST_COMMIT_MESSAGE" value="Final version" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -901,20 +908,10 @@
     <entry file="file://$PROJECT_DIR$/Naloga3/data/weather_data.csv">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/Naloga3/score_recognition/scores_altered.html">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/Naloga3/score_recognition/students.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="19">
           <caret line="19" column="44" selection-start-line="19" selection-start-column="44" selection-end-line="19" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Naloga3/score_recognition/scores.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="636">
-          <caret line="107" selection-start-line="107" selection-end-line="107" />
         </state>
       </provider>
     </entry>
@@ -925,30 +922,43 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Naloga3/lpp_prediction.py">
+    <entry file="file://$PROJECT_DIR$/Naloga3/score_recognition/scores.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="453">
-          <caret line="186" column="57" lean-forward="true" selection-start-line="186" selection-start-column="57" selection-end-line="186" selection-end-column="57" />
-          <folding>
-            <element signature="e#1#41#0" expanded="true" />
-            <marker date="1542666328546" expanded="true" signature="334:336" ph="..." />
-            <marker date="1542666328546" expanded="true" signature="1497:1580" ph="..." />
-            <marker date="1542666328546" expanded="true" signature="2389:2715" ph="..." />
-            <marker date="1542666328546" expanded="true" signature="8429:8435" ph="..." />
-            <marker date="1542666328546" expanded="true" signature="10034:10040" ph="..." />
-            <marker date="1542666328546" expanded="true" signature="10077:10086" ph="..." />
-          </folding>
+        <state relative-caret-position="512">
+          <caret line="121" selection-start-line="121" selection-end-line="121" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Naloga3/score_recognition/scores_altered.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2166">
+          <caret line="114" column="17" selection-start-line="114" selection-start-column="17" selection-end-line="114" selection-end-column="17" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Naloga3/naloga3.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="365">
-          <caret line="70" lean-forward="true" selection-start-line="70" selection-end-line="70" />
+        <state relative-caret-position="485">
+          <caret line="83" column="60" selection-start-line="83" selection-start-column="60" selection-end-line="83" selection-end-column="60" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <marker date="1542666328489" expanded="true" signature="192:194" ph="..." />
-            <marker date="1542666328489" expanded="true" signature="2102:2288" ph="..." />
+            <marker date="1542670339320" expanded="true" signature="192:194" ph="..." />
+            <marker date="1542670339320" expanded="true" signature="2102:2288" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Naloga3/lpp_prediction.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="76">
+          <caret line="4" column="11" selection-start-line="4" selection-start-column="11" selection-end-line="4" selection-end-column="11" />
+          <folding>
+            <marker date="1542670360328" expanded="true" signature="333:335" ph="..." />
+            <marker date="1542670360328" expanded="true" signature="1496:1579" ph="..." />
+            <marker date="1542670360328" expanded="true" signature="2388:2714" ph="..." />
+            <marker date="1542670360328" expanded="true" signature="8428:8434" ph="..." />
+            <marker date="1542670360328" expanded="true" signature="10033:10039" ph="..." />
+            <marker date="1542670360328" expanded="true" signature="10076:10085" ph="..." />
           </folding>
         </state>
       </provider>

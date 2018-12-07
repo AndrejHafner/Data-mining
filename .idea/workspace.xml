@@ -9,11 +9,11 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/Introduction_to_Data_mining$NALOGA2.coverage" NAME="NALOGA2 Coverage Results" MODIFIED="1541859067336" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Naloga2" />
-    <SUITE FILE_PATH="coverage/Introduction_to_Data_mining$linear.coverage" NAME="linear Coverage Results" MODIFIED="1541862967062" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Naloga3" />
-    <SUITE FILE_PATH="coverage/Introduction_to_Data_mining$NALOGA3.coverage" NAME="NALOGA3 Coverage Results" MODIFIED="1542665804849" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Naloga3" />
-    <SUITE FILE_PATH="coverage/Introduction_to_Data_mining$Recognize.coverage" NAME="Recognize Coverage Results" MODIFIED="1542666370432" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Naloga3/score_recognition" />
     <SUITE FILE_PATH="coverage/Introduction_to_Data_mining$Unnamed.coverage" NAME="RUN Coverage Results" MODIFIED="1540233386609" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Naloga_1-Eurovision" />
+    <SUITE FILE_PATH="coverage/Introduction_to_Data_mining$NALOGA3.coverage" NAME="NALOGA3 Coverage Results" MODIFIED="1542665804849" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Naloga3" />
+    <SUITE FILE_PATH="coverage/Introduction_to_Data_mining$linear.coverage" NAME="linear Coverage Results" MODIFIED="1541862967062" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Naloga3" />
+    <SUITE FILE_PATH="coverage/Introduction_to_Data_mining$NALOGA2.coverage" NAME="NALOGA2 Coverage Results" MODIFIED="1541859067336" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Naloga2" />
+    <SUITE FILE_PATH="coverage/Introduction_to_Data_mining$Recognize.coverage" NAME="Recognize Coverage Results" MODIFIED="1542666370432" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Naloga3/score_recognition" />
     <SUITE FILE_PATH="coverage/Introduction_to_Data_mining$TEST.coverage" NAME="TEST Coverage Results" MODIFIED="1540233534819" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/Naloga_1-Eurovision" />
   </component>
   <component name="DatabaseView">
@@ -79,6 +79,15 @@
         </counts>
       </usages-collector>
     </session>
+    <session id="-989890418">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="1" />
+          <entry key="project.open.time.30" value="1" />
+          <entry key="project.opened" value="1" />
+        </counts>
+      </usages-collector>
+    </session>
   </component>
   <component name="FileEditorManager">
     <splitter split-orientation="horizontal" split-proportion="0.4915694">
@@ -87,25 +96,8 @@
           <file pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/Naloga3/lpp_prediction.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="76">
+                <state relative-caret-position="68">
                   <caret line="4" column="11" selection-start-line="4" selection-start-column="11" selection-end-line="4" selection-end-column="11" />
-                  <folding>
-                    <marker date="1542670360328" expanded="true" signature="333:335" ph="..." />
-                    <marker date="1542670360328" expanded="true" signature="1496:1579" ph="..." />
-                    <marker date="1542670360328" expanded="true" signature="2388:2714" ph="..." />
-                    <marker date="1542670360328" expanded="true" signature="8428:8434" ph="..." />
-                    <marker date="1542670360328" expanded="true" signature="10033:10039" ph="..." />
-                    <marker date="1542670360328" expanded="true" signature="10076:10085" ph="..." />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/Naloga3/score_recognition/recognize_students.py">
-              <provider selected="true" editor-type-id="text-editor">
-                <state>
-                  <caret column="19" selection-start-column="19" selection-end-column="19" />
                 </state>
               </provider>
             </entry>
@@ -116,33 +108,6 @@
             </entry>
           </file>
           <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/Naloga3/score_recognition/students.txt">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="361">
-                  <caret line="19" column="44" selection-start-line="19" selection-start-column="44" selection-end-line="19" selection-end-column="44" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/Naloga3/score_recognition/scores.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2299">
-                  <caret line="121" selection-start-line="121" selection-end-line="121" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/Naloga3/score_recognition/scores_altered.html">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="2166">
-                  <caret line="114" column="17" selection-start-line="114" selection-start-column="17" selection-end-line="114" selection-end-column="17" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Naloga3/data/weather_data.csv">
               <provider selected="true" editor-type-id="text-editor" />
             </entry>
@@ -150,7 +115,7 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Naloga3/data/train.csv">
               <provider selected="true" editor-type-id="LargeFileEditor">
-                <state relative-caret-position="874">
+                <state relative-caret-position="782">
                   <caret line="46" selection-start-line="45" selection-end-line="46" />
                 </state>
               </provider>
@@ -159,7 +124,7 @@
           <file pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/Naloga3/linear.py">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="456">
+                <state relative-caret-position="408">
                   <caret line="32" column="4" selection-start-line="32" selection-start-column="4" selection-end-line="33" selection-end-column="30" />
                   <folding>
                     <element signature="e#0#35#0" expanded="true" />
@@ -179,8 +144,6 @@
                   <caret line="83" column="60" selection-start-line="83" selection-start-column="60" selection-end-line="83" selection-end-column="60" />
                   <folding>
                     <element signature="e#0#18#0" expanded="true" />
-                    <marker date="1542670339320" expanded="true" signature="192:194" ph="..." />
-                    <marker date="1542670339320" expanded="true" signature="2102:2288" ph="..." />
                   </folding>
                 </state>
               </provider>
@@ -234,8 +197,8 @@
     <sorting>DEFINITION_ORDER</sorting>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="3098" />
-    <option name="y" value="-40" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
     <option name="width" value="1382" />
     <option name="height" value="744" />
   </component>
@@ -247,6 +210,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -280,24 +244,17 @@
             <path>
               <item name="Introduction-to-Data-mining" type="b2602c69:ProjectViewProjectNode" />
               <item name="Introduction-to-Data-mining" type="462c0819:PsiDirectoryNode" />
-              <item name="Naloga3" type="462c0819:PsiDirectoryNode" />
-              <item name="score_recognition" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="Introduction-to-Data-mining" type="b2602c69:ProjectViewProjectNode" />
-              <item name="Introduction-to-Data-mining" type="462c0819:PsiDirectoryNode" />
               <item name="Naloga_1-Eurovision" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../oui" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/Naloga4" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
@@ -565,9 +522,9 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="2552" y="-8" width="1936" height="1176" extended-state="6" />
+    <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.12864584" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1301059" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -671,20 +628,8 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/matplotlib/category.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="242">
-          <caret line="185" selection-start-line="185" selection-end-line="185" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/numpy/lib/function_base.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="325">
-          <caret line="53" column="4" selection-start-line="53" selection-start-column="4" selection-end-line="53" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/matplotlib/category.py" />
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/numpy/lib/function_base.py" />
     <entry file="file://$PROJECT_DIR$/Naloga2/langs/cln.txt">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -811,8 +756,6 @@
           <caret line="15" column="4" selection-start-line="15" selection-start-column="4" selection-end-line="19" selection-end-column="26" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
-            <marker date="1540233423948" expanded="true" signature="2482:2486" ph="..." />
-            <marker date="1540233423948" expanded="true" signature="2515:2520" ph="..." />
           </folding>
         </state>
       </provider>
@@ -824,58 +767,14 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/scipy/optimize/lbfgsb.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="48" column="4" selection-start-line="48" selection-start-column="4" selection-end-line="48" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/codecs.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-2121">
-          <caret line="310" selection-start-line="310" selection-end-line="310" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/sklearn/preprocessing/data.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="178">
-          <caret line="1242" column="8" selection-start-line="1242" selection-start-column="8" selection-end-line="1242" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.PyCharm2018.2/system/python_stubs/1479466528/builtins.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-205">
-          <caret line="339" column="4" selection-start-line="339" selection-start-column="4" selection-end-line="339" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Naloga3/score_recognition/emails_and_names.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/numpy/lib/arraypad.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="71">
-          <caret line="992" column="4" selection-start-line="992" selection-start-column="4" selection-end-line="992" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/concurrent/futures/process.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="43">
-          <caret line="448" column="8" selection-start-line="448" selection-start-column="8" selection-end-line="448" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/datetime.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="63">
-          <caret line="1563" column="8" selection-start-line="1563" selection-start-column="8" selection-end-line="1563" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/scipy/optimize/lbfgsb.py" />
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/codecs.py" />
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/sklearn/preprocessing/data.py" />
+    <entry file="file://$USER_HOME$/.PyCharm2018.2/system/python_stubs/1479466528/builtins.py" />
+    <entry file="file://$PROJECT_DIR$/Naloga3/score_recognition/emails_and_names.txt" />
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/site-packages/numpy/lib/arraypad.py" />
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/concurrent/futures/process.py" />
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/datetime.py" />
     <entry file="file://$PROJECT_DIR$/Naloga3/lpputils.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="57">
@@ -883,65 +782,33 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Naloga3/score_recognition/recognize_students.py" />
+    <entry file="file://$PROJECT_DIR$/Naloga3/score_recognition/students.txt" />
+    <entry file="file://$PROJECT_DIR$/Naloga3/score_recognition/scores.html" />
+    <entry file="file://$PROJECT_DIR$/Naloga3/score_recognition/scores_altered.html" />
     <entry file="file://$PROJECT_DIR$/Naloga3/lpp_prediction.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="76">
+        <state relative-caret-position="68">
           <caret line="4" column="11" selection-start-line="4" selection-start-column="11" selection-end-line="4" selection-end-column="11" />
-          <folding>
-            <marker date="1542670360328" expanded="true" signature="333:335" ph="..." />
-            <marker date="1542670360328" expanded="true" signature="1496:1579" ph="..." />
-            <marker date="1542670360328" expanded="true" signature="2388:2714" ph="..." />
-            <marker date="1542670360328" expanded="true" signature="8428:8434" ph="..." />
-            <marker date="1542670360328" expanded="true" signature="10033:10039" ph="..." />
-            <marker date="1542670360328" expanded="true" signature="10076:10085" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Naloga3/score_recognition/recognize_students.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret column="19" selection-start-column="19" selection-end-column="19" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/Naloga3/score_recognition/students.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="361">
-          <caret line="19" column="44" selection-start-line="19" selection-start-column="44" selection-end-line="19" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Naloga3/score_recognition/scores.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2299">
-          <caret line="121" selection-start-line="121" selection-end-line="121" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Naloga3/score_recognition/scores_altered.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2166">
-          <caret line="114" column="17" selection-start-line="114" selection-start-column="17" selection-end-line="114" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Naloga3/data/weather_data.csv">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/Naloga3/data/train.csv">
       <provider selected="true" editor-type-id="LargeFileEditor">
-        <state relative-caret-position="874">
+        <state relative-caret-position="782">
           <caret line="46" selection-start-line="45" selection-end-line="46" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Naloga3/linear.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="456">
+        <state relative-caret-position="408">
           <caret line="32" column="4" selection-start-line="32" selection-start-column="4" selection-end-line="33" selection-end-column="30" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
@@ -955,8 +822,6 @@
           <caret line="83" column="60" selection-start-line="83" selection-start-column="60" selection-end-line="83" selection-end-column="60" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <marker date="1542670339320" expanded="true" signature="192:194" ph="..." />
-            <marker date="1542670339320" expanded="true" signature="2102:2288" ph="..." />
           </folding>
         </state>
       </provider>

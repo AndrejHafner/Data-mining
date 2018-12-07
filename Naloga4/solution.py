@@ -36,7 +36,7 @@ def cost(theta, X, y, lambda_):
     A = np.array([h(X[i],theta) for i in range(m)])
     # Vectorized form
     # Fires divide by zero error -> actually error because of trying to calculate log(0)
-    res = (-1/m) * np.sum((y.transpose() @ np.log(A)) + ((1-y).transpose() @ np.log(1-A))) + regularization(lambda_,theta,type="l2")
+    res = (-1/m) * np.sum((y.transpose() @ np.log(A)) + ((1-y).transpose() @ np.log(1-A))) + lambda_*np.sum(np.square(theta))/(2*m)
     return res
 
 
@@ -45,15 +45,15 @@ def grad(theta, X, y, lambda_):
     Odvod cenilne funkcije. Vrne numpyev vektor v velikosti vektorja theta.
     """
 
+
     m = len(y)
     grad = np.zeros(theta.shape)
     hx = np.array([h(X[i], theta) for i in range(m)])
 
     for i in range(len(theta)):
         xt = X[:,i]
-        grad[i] = (1/m) * np.sum((hx-y)*xt)
+        grad[i] = (1/m) * np.sum((hx-y)*xt) + ((lambda_ * theta[i]) / m)
 
-    grad = grad + regularization(lambda_,theta,type="l2")
     return grad
 
 

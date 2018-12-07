@@ -51,8 +51,9 @@ def grad(theta, X, y, lambda_):
 
     for i in range(len(theta)):
         xt = X[:,i]
-        grad[i] = (1/m) * np.sum((hx-y)*xt) + regularization(lambda_,theta[i],type="l2")
+        grad[i] = (1/m) * np.sum((hx-y)*xt)
 
+    grad = grad + regularization(lambda_,theta,type="l2")
     return grad
 
 

@@ -128,27 +128,71 @@ def test_learning(learner, X, y):
 
 
 def test_cv(learner, X, y, k=5):
-    # ... dopolnite (naloga 3)
-    pass
+    predictions = []
+
+    # Shuffle
+    seed = 42
+    rng = range(0,X.shape[0])
+
+    np.random.seed(seed)
+    shuffle_idx = list(rng)
+    np.random.shuffle(shuffle_idx)
+    X_shuffle = np.array([X[k] for k in shuffle_idx])
+    y_shuffle = np.array([y[k] for k in shuffle_idx])
+
+    for i in range(1,k+1):
+        X_train, X_test, Y_train, Y_test = kfold(X_shuffle,y_shuffle,i,k)
+        classifier = learner(X_train,Y_train)
+        predictions = predictions + [classifier(row) for row in X_test]
+
+    return [predictions[shuffle_idx.index(j)] for j in rng]
+
+
 
 
 def CA(real, predictions):
-    # ... dopolnite (naloga 3)
-    pass
-
+    return sum([1 if (predictions[i][0] > 0.5 and real[i] == 0) or (predictions[i][1] > 0.5 and real[i] == 1) else 0 for i in range(len(real))]) / len(real)
 
 def AUC(real, predictions):
-    # ... dopolnite (dodatna naloga)
-    pass
+    pred = [x[1] for x in predictions]
+    cnt = 0
+    sum = 0
+    rng = range(len(real))
+    for i in rng:
+        for j in range(i+1,len(real)):
+            if real[i] != real[j]:
+                cnt += 1
+
+                if pred[i] == pred[j]:
+                    sum += 0.5
+                elif pred[i] < pred[j]:
+                    sum += 1
+
+    return sum / cnt
+
+def kfold(X,y,i,k):
+    n = len(X)
+    indexes_to_keep = set(range(X.shape[0])) - set(range(n*(i-1)//k,(n*i//k)))
+    train = list(indexes_to_keep)
+    test = list(range(n*(i-1)//k,n*i//k))
+    X_train = X[train]
+    X_test = X[test]
+    Y_train = y[train]
+    Y_test = y[test]
+
+    return X_train,X_test,Y_train,Y_test
 
 
 if __name__ == "__main__":
     # Primer uporabe
 
+    learner = LogRegLearner(lambda_=0.0)
 
     X, y = load('reg.data')
 
-    learner = LogRegLearner(lambda_=0.0)
+    print(test_cv(learner,X,y,5))
+
+
     classifier = learner(X, y) # dobimo model
     print(test_learning(learner,X,y))
     #napoved = classifier(X[0])  # napoved za prvi primer

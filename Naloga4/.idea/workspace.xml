@@ -2,9 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="16ed7113-2b01-4541-9a1d-ff26b1f92a3a" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/Naloga4.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Naloga4.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/rezultati.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/draw.py" beforeDir="false" afterPath="$PROJECT_DIR$/draw.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/myplot4.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/solution.py" beforeDir="false" afterPath="$PROJECT_DIR$/solution.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -14,10 +15,10 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/Naloga4$Run.coverage" NAME="Run Coverage Results" MODIFIED="1544213090462" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Naloga4$Tests.coverage" NAME="Tests Coverage Results" MODIFIED="1544213095308" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+    <SUITE FILE_PATH="coverage/Naloga4$Run.coverage" NAME="Run Coverage Results" MODIFIED="1544216976854" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Naloga4$Tests.coverage" NAME="Tests Coverage Results" MODIFIED="1544217620762" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
     <SUITE FILE_PATH="coverage/Naloga4$Unnamed.coverage" NAME="Run Coverage Results" MODIFIED="1544044025576" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/Naloga4$Draw.coverage" NAME="Draw Coverage Results" MODIFIED="1544049268366" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/Naloga4$Draw.coverage" NAME="Draw Coverage Results" MODIFIED="1544217485899" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/Naloga4$Test.coverage" NAME="Test Coverage Results" MODIFIED="1544045183861" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FUSProjectUsageTrigger">
@@ -32,23 +33,25 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="data" value="2" />
-          <entry key="py" value="10" />
+          <entry key="png" value="4" />
+          <entry key="py" value="12" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
+          <entry key="Image" value="4" />
           <entry key="PLAIN_TEXT" value="2" />
-          <entry key="Python" value="10" />
+          <entry key="Python" value="12" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="4003" />
+          <entry key="py" value="4450" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="4003" />
+          <entry key="Python" value="4450" />
         </counts>
       </usages-collector>
     </session>
@@ -78,15 +81,43 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/solution.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="155">
-              <caret line="187" lean-forward="true" selection-start-line="187" selection-end-line="187" />
+            <state relative-caret-position="138">
+              <caret line="188" lean-forward="true" selection-start-line="188" selection-end-line="204" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
-                <marker date="1544213088421" expanded="true" signature="3856:4015" ph="..." />
-                <marker date="1544213088421" expanded="true" signature="4081:4411" ph="..." />
+                <marker date="1544216976823" expanded="true" signature="3639:3798" ph="..." />
+                <marker date="1544216976823" expanded="true" signature="3864:4194" ph="..." />
+                <marker date="1544216976823" expanded="true" signature="4215:4566" ph="..." />
               </folding>
             </state>
           </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/rezultati.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="399">
+              <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
+              <folding>
+                <element signature="e#0#53#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/myplot3.png">
+          <provider selected="true" editor-type-id="images" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/myplot2.png">
+          <provider selected="true" editor-type-id="images" />
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/myplot1.png">
+          <provider selected="true" editor-type-id="images" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
@@ -101,7 +132,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/draw.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="551">
+            <state relative-caret-position="79">
               <caret line="29" column="50" selection-start-line="29" selection-start-column="50" selection-end-line="29" selection-end-column="50" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
@@ -128,9 +159,10 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/draw.py" />
         <option value="$PROJECT_DIR$/test_solution.py" />
         <option value="$PROJECT_DIR$/solution.py" />
+        <option value="$PROJECT_DIR$/draw.py" />
+        <option value="$PROJECT_DIR$/rezultati.py" />
       </list>
     </option>
   </component>
@@ -170,7 +202,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/test_solution.py" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/rezultati.py" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
@@ -209,7 +241,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/draw.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/rezultati.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -276,15 +308,6 @@
     <servers />
   </component>
   <component name="TestHistory">
-    <history-entry file="Tests - 2018.12.07 at 20h 04m 52s.xml">
-      <configuration name="Tests" configurationId="tests" />
-    </history-entry>
-    <history-entry file="Tests - 2018.12.07 at 20h 07m 50s.xml">
-      <configuration name="Tests" configurationId="tests" />
-    </history-entry>
-    <history-entry file="Tests - 2018.12.07 at 20h 09m 07s.xml">
-      <configuration name="Tests" configurationId="tests" />
-    </history-entry>
     <history-entry file="Tests - 2018.12.07 at 20h 14m 21s.xml">
       <configuration name="Tests" configurationId="tests" />
     </history-entry>
@@ -304,6 +327,15 @@
       <configuration name="Tests" configurationId="tests" />
     </history-entry>
     <history-entry file="Tests - 2018.12.07 at 21h 04m 55s.xml">
+      <configuration name="Tests" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Tests - 2018.12.07 at 21h 07m 04s.xml">
+      <configuration name="Tests" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Tests - 2018.12.07 at 22h 13m 30s.xml">
+      <configuration name="Tests" configurationId="tests" />
+    </history-entry>
+    <history-entry file="Tests - 2018.12.07 at 22h 20m 21s.xml">
       <configuration name="Tests" configurationId="tests" />
     </history-entry>
   </component>
@@ -370,16 +402,6 @@
     <entry file="file://$USER_HOME$/.PyCharm2018.2/system/python_stubs/1479466528/numpy/core/umath.py" />
     <entry file="file://$USER_HOME$/.PyCharm2018.2/system/python_stubs/1479466528/numpy/core/multiarray.py" />
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python36/Lib/unittest/case.py" />
-    <entry file="file://$PROJECT_DIR$/draw.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="551">
-          <caret line="29" column="50" selection-start-line="29" selection-start-column="50" selection-end-line="29" selection-end-column="50" />
-          <folding>
-            <element signature="e#0#12#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/reg.data">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -390,14 +412,47 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/myplot4.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/myplot1.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/myplot2.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/draw.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="79">
+          <caret line="29" column="50" selection-start-line="29" selection-start-column="50" selection-end-line="29" selection-end-column="50" />
+          <folding>
+            <element signature="e#0#12#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/myplot3.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rezultati.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="399">
+          <caret line="21" lean-forward="true" selection-start-line="21" selection-end-line="21" />
+          <folding>
+            <element signature="e#0#53#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/solution.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="155">
-          <caret line="187" lean-forward="true" selection-start-line="187" selection-end-line="187" />
+        <state relative-caret-position="138">
+          <caret line="188" lean-forward="true" selection-start-line="188" selection-end-line="204" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
-            <marker date="1544213088421" expanded="true" signature="3856:4015" ph="..." />
-            <marker date="1544213088421" expanded="true" signature="4081:4411" ph="..." />
+            <marker date="1544216976823" expanded="true" signature="3639:3798" ph="..." />
+            <marker date="1544216976823" expanded="true" signature="3864:4194" ph="..." />
+            <marker date="1544216976823" expanded="true" signature="4215:4566" ph="..." />
           </folding>
         </state>
       </provider>

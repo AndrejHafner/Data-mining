@@ -12,13 +12,6 @@ def load(name):
     X, y = data[:, :-1], data[:, -1].astype(np.int)
     return X, y
 
-def regularization(lambda_,thetas,type="l1"):
-    if type == "l1":
-        return lambda_ * np.sum(np.abs(thetas))
-    elif type =="l2":
-        return lambda_ * np.sum(np.square(thetas))
-    else:
-        return 0
 
 def h(x, theta):
     """ 
@@ -44,8 +37,6 @@ def grad(theta, X, y, lambda_):
     """
     Odvod cenilne funkcije. Vrne numpyev vektor v velikosti vektorja theta.
     """
-
-
     m = len(y)
     grad = np.zeros(theta.shape)
     hx = np.array([h(X[i], theta) for i in range(m)])
@@ -170,6 +161,19 @@ def AUC(real, predictions):
 
     return sum / cnt
 
+def test_lambdas():
+    X, y = load('reg.data')
+
+    for i in range(-10,5):
+        lm = float(math.pow(10.0,i))
+        learner = LogRegLearner(lambda_=lm)
+        res_cv = test_cv(learner,X,y)
+        res = test_learning(learner,X,y)
+        accuracy_cv = CA(y,res_cv)
+        accuracy = CA(y,res)
+
+        print("$10^%d$ & %f  & %f \\\\" % (i,accuracy,accuracy_cv))
+
 def kfold(X,y,i,k):
     n = len(X)
     indexes_to_keep = set(range(X.shape[0])) - set(range(n*(i-1)//k,(n*i//k)))
@@ -185,16 +189,16 @@ def kfold(X,y,i,k):
 
 if __name__ == "__main__":
     # Primer uporabe
-
-    learner = LogRegLearner(lambda_=0.0)
-
-    X, y = load('reg.data')
-
-    print(test_cv(learner,X,y,5))
-
-
-    classifier = learner(X, y) # dobimo model
-    print(test_learning(learner,X,y))
-    #napoved = classifier(X[0])  # napoved za prvi primer
-    #print(napoved)
+    test_lambdas()
+    # learner = LogRegLearner(lambda_=0.0)
+    #
+    # X, y = load('reg.data')
+    #
+    # print(test_cv(learner,X,y,5))
+    #
+    #
+    # classifier = learner(X, y) # dobimo model
+    # print(test_learning(learner,X,y))
+    # #napoved = classifier(X[0])  # napoved za prvi primer
+    # #print(napoved)
 

@@ -28,7 +28,6 @@ def draw_decision(X, y, classifier, at1, at2, grid=50):
             dists = (diff[:,0]**2 + diff[:,1]**2)**0.5 #euclidean
             ind = numpy.argsort(dists)
             prob[yi,xi] = classifier(X[ind[0]])[1]
-    pylab.title("Regularization=l1, lambda=0.0001")
     pylab.imshow(prob, extent=(minx,maxx,maxy,miny))
 
     pylab.xlim(minx, maxx)
@@ -40,7 +39,7 @@ def draw_decision(X, y, classifier, at1, at2, grid=50):
 
 X,y = load('reg.data')
 
-learner = LogRegLearner(lambda_=0.000001)
+learner = LogRegLearner(lambda_=0.1)
 classifier = learner(X,y)
 
 draw_decision(X, y, classifier, 0, 1)

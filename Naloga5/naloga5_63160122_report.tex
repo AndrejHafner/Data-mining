@@ -10,6 +10,7 @@
 \usepackage{a4wide}
 \usepackage{fullpage}
 \usepackage[utf8x]{inputenc}
+\usepackage{float}
 \usepackage[slovene]{babel}
 \selectlanguage{slovene}
 \usepackage[toc,page]{appendix}
@@ -73,36 +74,28 @@ backgroundcolor=\color{light-gray},
 
 \normalfont\textsl{}
 \section{Opis metod.}
-\item[Matrična faktorizacija brez pristranosti] ew
-\item[Matrična faktorizacija brez pristranosti] ew
 
-\section{Rezultati.} m
-\begin{table}[htbp]
-	\caption{Vrednost parametra $\lambda$ in napovedna točnost pri prečnem preverjanju, ter testiranju na učnih podatkih.}
-	\label{tab1}
-	\begin{center}
+\begin{description}
+\item[Matrična faktorizacija brez pristranosti] Implementirana je bila matrična faktorizacija, brez pristranosti uporabnika ali izvajalca. Iteracije se izvajajo dokler je RMSE na validacijski množici manjši kot v prejšnji iteraciji. 
+
+\item[Matrična faktorizacija z pristranostjo] Implementirana je bila enaka matrična faktorizacija kot v prvi metodi, z dodano pristranostjo uporabnika in izvajalca. To je bilo dodano kot enice v predzadnjem stolpcu v matriki P in kot enice v zadnji vrstici matrike Q, ter z majhno spremembo v gradientnem spustu. 
+\item[Matrična faktorizacija z pristranostjo in oznakami izvajalcev] Enako kot prejšnja metoda, sprememba nastane pri napovedovanju ocene izvajalca. Opazil sem, da je v testni množici prisotnih 1100 izvajalcev, ki jih ni v učni. Uporabil sem podatke iz \textit{user\_taggedartist.dat} da sem pridobil največkrat označeno oznako za vsakega izvajalca. V primeru, da je bilo potrebno napovedati oceno za izvajalca, ki ga ni bilo v učni množici, je bila ocena povprečje ocen uporabnika za izvajalce z enako največkrat označeno oznako.
+\end{description}
+
+\section{Rezultati.} 
+
+\begin{table}[!htb]
+	\centering
 		\begin{tabular}{llp{4.3cm}}
 			\hline
-			 $\lambda$ & CA (učni podatki) & CA (prečno preverjanje) \\
+			 Ime metode & RMSE (učni podatki) & RMSE (tekmovalni strežnik) \\
 			\hline
-			$10^{-10}$ & 1.00  & 0.80 \\
-			$10^{-9}$ & 1.00  & 0.78 \\
-			$10^{-8}$ & 1.00  & 0.78 \\
-			$10^{-7}$ & 1.00  & 0.78 \\
-			$10^{-6}$ & 1.00  & 0.78 \\
-			$10^{-5}$ & 1.00  & 0.78 \\
-			$10^{-4}$ & 1.00  & 0.77 \\
-			$10^{-3}$ & 1.00  & 0.73 \\
-			$10^{-2}$ & 1.00  & 0.75 \\
-			$10^{-1}$ & 0.96  & 0.77 \\
-			$1$ & 0.95  & 0.75\\
-			$10$ & 0.92  & 0.73\\
-			$10^2$ & 0.88  & 0.48 \\
-			$10^3$ & 0.77  & 0.50 \\
-			$10^4$ & 0.77  & 0.50 \\
+			Matrična faktorizacija brez pristranosti & 2.143  & 2.267 \\
+			Matrična faktorizacija z pristranostjo & 1.716  & 1.810 \\
+			Matrična faktorizacija z pristranostjo  & 1.716  & 1.797 \\
+			in oznakami izvajalcev & & \\
 			\hline
 		\end{tabular}
-	\end{center}
 \end{table}
 
 
